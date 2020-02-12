@@ -40,7 +40,7 @@ const AddItemComponent = ({addItem}) => {
 };
 
 // Displays items in a list
-const Items = ({list, item, deleteItem}) => {
+const Items = ({item, deleteItem}) => {
   return (
     <TouchableOpacity style={styles.listItem}>
       <View style={styles.listItemView}>
@@ -59,6 +59,8 @@ const Items = ({list, item, deleteItem}) => {
 const ListDetails = ({route, navigation}) => {
   const {list} = route.params;
 
+  const newItemsArray = [];
+
   const [items, setItems] = useState([
     {id: uuid(), list: 'Grocery List', name: 'Milk'},
     {id: uuid(), list: 'Grocery List', name: 'Eggs'},
@@ -66,13 +68,22 @@ const ListDetails = ({route, navigation}) => {
     {id: uuid(), list: 'Todo', name: 'Bread'},
   ]);
 
+  // Function to check if item belongs in a list
+  const isInList = () => {
+    for (let i = 0; i < items.length; i++) {
+      if (list.name == items[i].list) {
+        newItemsArray.push(items[i]);
+      }
+    }
+  };
+
   //   Function to check and add a list
   const addItem = text => {
     if (!text) {
       Alert.alert('Error', 'Please enter an item', {text: 'Ok'});
     } else {
       setItems(previousItem => {
-        return [{id: uuid(), name: text}, ...previousItem];
+        return [{id: uuid(), list: list.name, name: text}, ...previousItem];
       });
     }
   };
@@ -84,20 +95,20 @@ const ListDetails = ({route, navigation}) => {
     });
   };
 
+  isInList();
   return (
     <View>
       <Text>{list.name}</Text>
       <AddItemComponent addItem={addItem} />
       <FlatList
-        data={items}
-        renderItem={({item}) => (
-          <Items item={item} deleteItem={deleteItem} list={list} />
-        )}
+        data={newItemsArray}
+        renderItem={({item}) => <Items item={item} deleteItem={deleteItem} />}
       />
     </View>
   );
 };
 
+// CSS
 const styles = StyleSheet.create({
   listItem: {
     padding: 15,
