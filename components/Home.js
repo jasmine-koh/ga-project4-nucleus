@@ -36,7 +36,12 @@ const Home = ({navigation}) => {
           </Card>
         </View>
         <View style={styles.dashboardCards}>
-          <Card title="Location" containerStyle={styles.card}></Card>
+          <Card title="Location" containerStyle={styles.card}>
+            {/* possibe to onPress card? */}
+            <Button
+              onPress={() => navigation.navigate('Location')}
+              title="View all"></Button>
+          </Card>
           <Card title="Contact" containerStyle={styles.card}></Card>
         </View>
       </TouchableOpacity>
