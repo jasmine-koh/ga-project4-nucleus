@@ -52,7 +52,7 @@ const Listing = ({list, deleteList, navigation}) => {
             })
           }
           style={styles.listItemText}>
-          {list.name} {list.id}
+          {list.name}
         </Text>
         <Icon
           name="remove"
@@ -91,7 +91,9 @@ const Lists = ({navigation}) => {
 
   return (
     <View>
-      <AddListComponent addList={addList} />
+      <View style={styles.listsHeaderView}>
+        <Text style={styles.listsHeader}>Lists</Text>
+      </View>
       <FlatList
         data={lists}
         renderItem={({item}) => (
@@ -102,6 +104,7 @@ const Lists = ({navigation}) => {
           />
         )}
       />
+      <AddListComponent addList={addList} />
     </View>
   );
 };
@@ -135,6 +138,14 @@ const styles = StyleSheet.create({
     color: 'darkslateblue',
     fontSize: 20,
     textAlign: 'center',
+  },
+  listsHeaderView: {
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#eee',
+  },
+  listsHeader: {
+    fontSize: 30,
   },
 });
 

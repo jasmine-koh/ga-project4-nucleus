@@ -98,12 +98,15 @@ const ListDetails = ({route, navigation}) => {
   isInList();
   return (
     <View>
-      <Text>{list.name}</Text>
-      <AddItemComponent addItem={addItem} />
+      <View style={styles.listDetailsHeaderView}>
+        <Text style={styles.listDetailsHeader}>{list.name}</Text>
+      </View>
+
       <FlatList
         data={newItemsArray}
         renderItem={({item}) => <Items item={item} deleteItem={deleteItem} />}
       />
+      <AddItemComponent addItem={addItem} />
     </View>
   );
 };
@@ -138,6 +141,14 @@ const styles = StyleSheet.create({
     color: 'darkslateblue',
     fontSize: 20,
     textAlign: 'center',
+  },
+  listDetailsHeaderView: {
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#eee',
+  },
+  listDetailsHeader: {
+    fontSize: 30,
   },
 });
 
