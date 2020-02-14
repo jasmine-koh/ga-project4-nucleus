@@ -35,6 +35,7 @@ target 'Nucleus' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
   pod 'react-native-geolocation', path: '../node_modules/@react-native-community/geolocation'
+  pod 'react-native-maps', path: '../node_modules/react-native-maps'
 
   target 'NucleusTests' do
     inherit! :search_paths
