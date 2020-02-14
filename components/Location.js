@@ -1,72 +1,60 @@
 import 'react-native-gesture-handler';
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {View, Text, StyleSheet} from 'react-native';
 
 import Geolocation from '@react-native-community/geolocation';
 
 const Location = ({navigation}) => {
-  let newLocation = [
-    {
-      ready: false,
-      where: {lat: null, lng: null},
-      error: null,
-    },
-  ];
+  const [location, setLocation] = useState({
+    latitude: 'unknown',
+    longitude: 'unknown',
+    ready: false,
+    error: '',
+  });
 
-  let geoOptions = {
-    enableHighAccuracy: true,
-    timeOut: 20000,
-    maximumAge: 60 * 60,
-  };
+  useEffect(() => {
+    let geoOption = {
+      enableHighAccuracy: true,
+      timeOut: 20000,
+      maximumAge: 60 * 60,
+    };
 
-  //   Geolocation.getCurrentPosition(geoSuccess, geoFailure, geoOptions);
+    Geolocation.getCurrentPosition(geoSuccess, geoFailure, geoOption);
+  }, []);
 
-  const geoSuccess = postion => {
-    newLocation.push({
-      ready: true,
-      where: {lat: position.coords.latitude, lng: position.coords.longitude},
+  //   geoSuccess
+  const geoSuccess = position => {
+    ready = true;
+    latitude = position.coords.latitude;
+    longitude = position.coords.longitude;
+    setLocation(prevState => {
+      return {...prevState, ...ready, latitude, longitude};
     });
   };
 
+  // geoError
   const geoFailure = err => {
-    newLocation.push({
-      error: err.message,
+    error = err;
+    ready = true;
+    setLocation(prevState => {
+      return {...prevState, ...ready, error};
     });
   };
 
+  console.log(location);
   return (
     <View>
-      <Text>Location</Text>
-      {!newLocation.ready && <Text>Using Geolocation in React Native</Text>}
-      {newLocation.error && <Text>{newLocation.error}</Text>}
-      {newLocation.ready && (
-        <Text>
-          'Latitude: '{newLocation.where.lat}'. Longitude: '
-          {newLocation.where.lng}
-        </Text>
-      )}
+      <Text>Lat: {location.latitude}</Text>
+      <Text>Lng: {location.longitude}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  dashboardView: {
-    flex: 1,
-    padding: 100,
-    alignItems: 'center',
-    backgroundColor: 'azure',
-  },
-  dashboardText: {
-    fontSize: 50,
-  },
-  dashboardCards: {
-    flexDirection: 'row',
-  },
-  card: {
-    width: 150,
-    height: 150,
+  big: {
+    fontSize: 48,
   },
 });
 
