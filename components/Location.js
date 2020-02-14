@@ -5,6 +5,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
 import Geolocation from '@react-native-community/geolocation';
+import MapView from 'react-native-maps';
 
 const Location = ({navigation}) => {
   const [location, setLocation] = useState({
@@ -45,9 +46,17 @@ const Location = ({navigation}) => {
 
   console.log(location);
   return (
-    <View>
+    <View style={styles.container}>
       <Text>Lat: {location.latitude}</Text>
       <Text>Lng: {location.longitude}</Text>
+      <MapView
+        style={styles.map}
+        region={{
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.015,
+          longitudeDelta: 0.0121,
+        }}></MapView>
     </View>
   );
 };
@@ -55,6 +64,16 @@ const Location = ({navigation}) => {
 const styles = StyleSheet.create({
   big: {
     fontSize: 48,
+  },
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    height: 400,
+    width: 400,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
   },
 });
 
