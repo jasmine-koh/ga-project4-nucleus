@@ -37,6 +37,11 @@ target 'Nucleus' do
   pod 'react-native-geolocation', path: '../node_modules/@react-native-community/geolocation'
   pod 'react-native-maps', path: '../node_modules/react-native-maps'
 
+  pod 'react-native-google-maps', path: '../node_modules/react-native-maps'
+  pod 'GoogleMaps'
+  pod 'Google-Maps-iOS-Utils'
+
+
   target 'NucleusTests' do
     inherit! :search_paths
     # Pods for testing

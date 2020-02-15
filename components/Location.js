@@ -5,7 +5,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
 import Geolocation from '@react-native-community/geolocation';
-import MapView from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 
 const Location = ({navigation}) => {
   const [location, setLocation] = useState({
@@ -44,12 +44,12 @@ const Location = ({navigation}) => {
     });
   };
 
-  console.log(location);
   return (
     <View style={styles.container}>
       <Text>Lat: {location.latitude}</Text>
       <Text>Lng: {location.longitude}</Text>
       <MapView
+        provider={PROVIDER_GOOGLE}
         style={styles.map}
         region={{
           latitude: location.latitude,
