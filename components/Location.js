@@ -56,7 +56,8 @@ const Location = ({navigation}) => {
           longitude: location.longitude,
           latitudeDelta: 0.015,
           longitudeDelta: 0.0121,
-        }}></MapView>
+        }}
+        showsUserLocation={true}></MapView>
     </View>
   );
 };
