@@ -8,6 +8,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
   Button,
 } from 'react-native';
 
@@ -25,26 +26,30 @@ const Home = ({navigation}) => {
         <Text style={styles.dashboardText}>Nucleus</Text>
       </View>
 
-      <TouchableOpacity>
-        <View style={styles.dashboardCards}>
-          <Card title="Events" containerStyle={styles.card}></Card>
-          <Card title="List" containerStyle={styles.card}>
-            {/* possibe to onPress card? */}
-            <Button
-              onPress={() => navigation.navigate('Lists')}
-              title="View all"></Button>
-          </Card>
-        </View>
-        <View style={styles.dashboardCards}>
-          <Card title="Location" containerStyle={styles.card}>
-            {/* possibe to onPress card? */}
-            <Button
-              onPress={() => navigation.navigate('Location')}
-              title="View all"></Button>
-          </Card>
-          <Card title="Contact" containerStyle={styles.card}></Card>
-        </View>
-      </TouchableOpacity>
+      <ScrollView>
+        <TouchableOpacity>
+          <View style={styles.dashboardCards}>
+            <Card title="Events" containerStyle={styles.card}></Card>
+            <Card title="List" containerStyle={styles.card}>
+              {/* possibe to onPress card? */}
+              <Button
+                onPress={() => navigation.navigate('Lists')}
+                title="View all"></Button>
+            </Card>
+
+            <Card title="Location" containerStyle={styles.card}>
+              {/* possibe to onPress card? */}
+              <Button
+                onPress={() => navigation.navigate('Location')}
+                title="View all"></Button>
+            </Card>
+            <Card title="Contact" containerStyle={styles.card}></Card>
+
+            <Card title="Groups" containerStyle={styles.card}></Card>
+            <Card title="Settings" containerStyle={styles.card}></Card>
+          </View>
+        </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 };
@@ -60,7 +65,7 @@ const styles = StyleSheet.create({
     fontSize: 50,
   },
   dashboardCards: {
-    flexDirection: 'row',
+    flexDirection: 'column',
   },
   card: {
     width: 150,
