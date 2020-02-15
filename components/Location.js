@@ -9,8 +9,8 @@ import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 
 const Location = ({navigation}) => {
   const [location, setLocation] = useState({
-    latitude: 'unknown',
-    longitude: 'unknown',
+    latitude: 0,
+    longitude: 0,
     ready: false,
     error: '',
   });
