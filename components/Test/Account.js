@@ -8,8 +8,8 @@ import Config from 'react-native-config';
 import SInfo from 'react-native-sensitive-info';
 
 const auth0 = new Auth0({
-  domain: 'jkoh.auth0.com',
-  clientId: 'Uji6M7tZmRDPvXxxIkG08vzlh0X9Rm9q',
+  domain: Config.AUTH0_DOMAIN,
+  clientId: Config.AUTH0_CLIENT_ID,
 });
 
 const Account = ({navigation}) => {
