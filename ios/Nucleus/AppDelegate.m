@@ -7,16 +7,19 @@
 
 #import "AppDelegate.h"
 
+#import "ReactNativeConfig.h"
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <React/RCTLinkingManager.h>
 #import <GoogleMaps/GoogleMaps.h>
+
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  +  [GMSServices provideAPIKey:@"AIzaSyB9-FD6erpK5SEH3Mq8-mfI9ogD1dKzR_A"]; // add this line using the api key obtained from Google Console
+  +  [GMSServices provideAPIKey:@"GOOGLE_MAPS_API_KEY"]; // add this line using the api key obtained from Google Console
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"Nucleus"
@@ -40,5 +43,12 @@
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
 }
+
+    - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+     sourceApplication:(NSString *)sourceApplication annotation:    (id)annotation
+     {
+        return [RCTLinkingManager application:application openURL:url
+                          sourceApplication:sourceApplication       annotation:annotation];
+    }
 
 @end

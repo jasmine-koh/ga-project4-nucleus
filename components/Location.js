@@ -19,7 +19,6 @@ const Location = ({navigation}) => {
     let geoOption = {
       enableHighAccuracy: true,
       timeOut: 20000,
-      maximumAge: 60 * 60,
     };
 
     Geolocation.getCurrentPosition(geoSuccess, geoFailure, geoOption);

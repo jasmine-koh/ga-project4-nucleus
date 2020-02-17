@@ -14,7 +14,36 @@ import {
 
 import {Card} from 'react-native-elements';
 
+import Auth0 from 'react-native-auth0';
+import Config from 'react-native-config';
+import SInfo from 'react-native-sensitive-info';
+
+const auth0 = new Auth0({
+  domain: Config.AUTH0_DOMAIN,
+  clientId: Config.AUTH0_CLIENT_ID,
+});
+
 const Home = ({navigation}) => {
+  const logout = () => {
+    SInfo.deleteItem('accessToken', {});
+    SInfo.deleteItem('refreshToken', {});
+
+    auth0.webAuth
+      .clearSession()
+      .then(res => {
+        console.log('clear session ok');
+      })
+      .catch(err => {
+        console.log('error clearing session: ', err);
+      });
+
+    gotoLogin(); // go to login screen
+  };
+
+  const gotoLogin = () => {
+    navigation.navigate('Login');
+  };
+
   return (
     <View style={styles.dashboardView}>
       <View style={{alignItems: 'center'}}>
@@ -24,6 +53,11 @@ const Home = ({navigation}) => {
             uri: 'https://i.imgur.com/xvtm1e6.jpg',
           }}></Image>
         <Text style={styles.dashboardText}>Nucleus</Text>
+      </View>
+
+      <View>
+        <Text>Hello</Text>
+        <Button onPress={logout} title="Logout" />
       </View>
 
       <ScrollView>
