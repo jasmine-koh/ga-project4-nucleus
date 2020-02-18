@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Button, ActivityIndicator, StyleSheet} from 'react-native';
+import {View, Image, Button, ActivityIndicator, StyleSheet} from 'react-native';
 
 import Auth0 from 'react-native-auth0';
 import Config from 'react-native-config';
@@ -28,6 +28,7 @@ const Login = ({navigation}) => {
             // next: add code for dealing with invalid access token
             SInfo.getItem('refreshToken', {}).then(refreshToken => {
               // get the refresh token from the secure storage
+
               // request for a new access token using the refresh token
               auth0.auth
                 .refreshToken({refreshToken: refreshToken})
@@ -57,6 +58,8 @@ const Login = ({navigation}) => {
       .authorize({
         scope: Config.AUTHO_SCOPE,
         audience: Config.AUTH0_AUDIENCE,
+        device: DeviceInfo.getUniqueId(),
+        prompt: 'login',
       })
       .then(res => {
         // next: add code for getting user info
@@ -65,6 +68,7 @@ const Login = ({navigation}) => {
         auth0.auth
           .userInfo({token: res.accessToken})
           .then(data => {
+            console.log(data);
             gotoHome(data); // go to the Home screen
           })
           .catch(err => {
@@ -84,19 +88,34 @@ const Login = ({navigation}) => {
       hasInitialized: true,
     });
 
-    navigation.navigate('Home', data);
+    navigation.navigate('Home', {data});
   };
 
   return (
     <View>
-      <ActivityIndicator
-        size="large"
-        color="#05a5d1"
-        animating={!status.hasInitialized}
-      />
-      {status.hasInitialized && <Button onPress={login} title="Login" />}
+      <View style={styles.logo}>
+        <Image source={require('./img/logo.jpeg')} />
+      </View>
+
+      <View>
+        <ActivityIndicator
+          size="large"
+          color="#05a5d1"
+          animating={!status.hasInitialized}
+        />
+        {status.hasInitialized && <Button onPress={login} title="Login" />}
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  logo: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 100,
+  },
+  login: {},
+});
 
 export default Login;
