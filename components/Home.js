@@ -75,9 +75,15 @@ const Home = ({route, navigation}) => {
                   onPress={() => navigation.navigate('Location')}
                   title="View all"></Button>
               </Card>
-              <Card title="Contact" containerStyle={styles.card}></Card>
+              <Card title="Chat" containerStyle={styles.card}></Card>
 
-              <Card title="Groups" containerStyle={styles.card}></Card>
+              <Card title="Groups" containerStyle={styles.card}>
+                {/* possibe to onPress card? */}
+                <Button
+                  onPress={() => navigation.navigate('Group')}
+                  title="View all"></Button>
+              </Card>
+
               <Card title="Settings" containerStyle={styles.card}></Card>
             </View>
           </TouchableOpacity>

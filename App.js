@@ -3,8 +3,9 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import Config from 'react-native-config';
 
+import Group from './components/Group';
+import GroupDetails from './components/GroupDetails';
 import Home from './components/Home';
 import Lists from './components/ListHome';
 import ListDetails from './components/ListDetails';
@@ -17,6 +18,8 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Group" component={Group} />
+        <Stack.Screen name="GroupDetails" component={GroupDetails} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Lists" component={Lists} />
         <Stack.Screen name="Details" component={ListDetails} />
