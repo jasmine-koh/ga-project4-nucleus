@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Button,
+  SafeAreaView,
 } from 'react-native';
 
 import {Card} from 'react-native-elements';
@@ -23,7 +24,9 @@ const auth0 = new Auth0({
   clientId: Config.AUTH0_CLIENT_ID,
 });
 
-const Home = ({navigation}) => {
+const Home = ({route, navigation}) => {
+  const {data} = route.params;
+
   const logout = () => {
     SInfo.deleteItem('accessToken', {});
     SInfo.deleteItem('refreshToken', {});
@@ -45,65 +48,81 @@ const Home = ({navigation}) => {
   };
 
   return (
-    <View style={styles.dashboardView}>
-      <View style={{alignItems: 'center'}}>
-        <Image
-          style={{width: 300, padding: 80}}
-          source={{
-            uri: 'https://i.imgur.com/xvtm1e6.jpg',
-          }}></Image>
-        <Text style={styles.dashboardText}>Nucleus</Text>
-      </View>
-
-      <View>
-        <Text>Hello</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Hello {data.name}</Text>
         <Button onPress={logout} title="Logout" />
+        <View style={{alignItems: 'center'}}>
+          <Image source={require('./img/logo.jpeg')}></Image>
+        </View>
       </View>
 
-      <ScrollView>
-        <TouchableOpacity>
-          <View style={styles.dashboardCards}>
-            <Card title="Events" containerStyle={styles.card}></Card>
-            <Card title="List" containerStyle={styles.card}>
-              {/* possibe to onPress card? */}
-              <Button
-                onPress={() => navigation.navigate('Lists')}
-                title="View all"></Button>
-            </Card>
+      <View style={styles.body}>
+        <ScrollView>
+          <TouchableOpacity>
+            <View style={styles.dashboardCards}>
+              <Card title="Events" containerStyle={styles.card}></Card>
+              <Card title="List" containerStyle={styles.card}>
+                {/* possibe to onPress card? */}
+                <Button
+                  onPress={() => navigation.navigate('Lists')}
+                  title="View all"></Button>
+              </Card>
 
-            <Card title="Location" containerStyle={styles.card}>
-              {/* possibe to onPress card? */}
-              <Button
-                onPress={() => navigation.navigate('Location')}
-                title="View all"></Button>
-            </Card>
-            <Card title="Contact" containerStyle={styles.card}></Card>
+              <Card title="Location" containerStyle={styles.card}>
+                {/* possibe to onPress card? */}
+                <Button
+                  onPress={() => navigation.navigate('Location')}
+                  title="View all"></Button>
+              </Card>
+              <Card title="Contact" containerStyle={styles.card}></Card>
 
-            <Card title="Groups" containerStyle={styles.card}></Card>
-            <Card title="Settings" containerStyle={styles.card}></Card>
-          </View>
-        </TouchableOpacity>
-      </ScrollView>
-    </View>
+              <Card title="Groups" containerStyle={styles.card}></Card>
+              <Card title="Settings" containerStyle={styles.card}></Card>
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+
+      <View style={styles.footer}>
+        <Text>Footer goes here</Text>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  dashboardView: {
+  container: {
     flex: 1,
-    padding: 100,
-    alignItems: 'center',
     backgroundColor: 'azure',
   },
-  dashboardText: {
-    fontSize: 50,
+  header: {
+    flex: 3,
+    paddingTop: 10,
+    alignItems: 'center',
+  },
+  headerText: {
+    fontSize: 20,
+  },
+  body: {
+    flex: 6,
+    paddingTop: 60,
   },
   dashboardCards: {
-    flexDirection: 'column',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   card: {
     width: 150,
     height: 150,
+  },
+  footer: {
+    flex: 1,
+    paddingTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
