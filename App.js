@@ -11,13 +11,14 @@ import Lists from './components/ListHome';
 import ListDetails from './components/ListDetails';
 import Location from './components/Location';
 import Login from './components/Login';
+import Profile from './components/UserProfile';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Profile">
         <Stack.Screen name="Group" component={Group} />
         <Stack.Screen name="GroupDetails" component={GroupDetails} />
         <Stack.Screen name="Home" component={Home} />
@@ -25,6 +26,7 @@ const App = () => {
         <Stack.Screen name="Details" component={ListDetails} />
         <Stack.Screen name="Location" component={Location} />
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Profile" component={Profile} />
       </Stack.Navigator>
     </NavigationContainer>
   );
