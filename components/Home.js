@@ -2,18 +2,24 @@ import 'react-native-gesture-handler';
 
 import React from 'react';
 
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Button,
-  SafeAreaView,
-} from 'react-native';
+import {Image, StyleSheet} from 'react-native';
 
-import {Card} from 'react-native-elements';
+import {
+  Container,
+  Header,
+  Left,
+  Body,
+  Right,
+  Content,
+  Card,
+  CardItem,
+  Footer,
+  FooterTab,
+  Button,
+  Icon,
+  Title,
+  Text,
+} from 'native-base';
 
 import Auth0 from 'react-native-auth0';
 import Config from 'react-native-config';
@@ -27,6 +33,7 @@ const auth0 = new Auth0({
 const Home = ({route, navigation}) => {
   const {data} = route.params;
 
+  // For Auth0 Logout
   const logout = () => {
     SInfo.deleteItem('accessToken', {});
     SInfo.deleteItem('refreshToken', {});
@@ -43,92 +50,108 @@ const Home = ({route, navigation}) => {
     gotoLogin(); // go to login screen
   };
 
+  // For Auth0 Login
   const gotoLogin = () => {
     navigation.navigate('Login');
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Hello {data.name}</Text>
-        <Button onPress={logout} title="Logout" />
-        <View style={{alignItems: 'center'}}>
-          <Image source={require('./img/logo.jpeg')}></Image>
-        </View>
-      </View>
-
-      <View style={styles.body}>
-        <ScrollView>
-          <TouchableOpacity>
-            <View style={styles.dashboardCards}>
-              <Card title="Events" containerStyle={styles.card}></Card>
-              <Card title="List" containerStyle={styles.card}>
-                {/* possibe to onPress card? */}
-                <Button
-                  onPress={() => navigation.navigate('Lists')}
-                  title="View all"></Button>
-              </Card>
-
-              <Card title="Location" containerStyle={styles.card}>
-                {/* possibe to onPress card? */}
-                <Button
-                  onPress={() => navigation.navigate('Location')}
-                  title="View all"></Button>
-              </Card>
-              <Card title="Chat" containerStyle={styles.card}></Card>
-
-              <Card title="Groups" containerStyle={styles.card}>
-                {/* possibe to onPress card? */}
-                <Button
-                  onPress={() => navigation.navigate('Group')}
-                  title="View all"></Button>
-              </Card>
-
-              <Card title="Settings" containerStyle={styles.card}></Card>
-            </View>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-
-      <View style={styles.footer}>
-        <Text>Footer goes here</Text>
-      </View>
-    </SafeAreaView>
+    <Container style={styles.container}>
+      <Header>
+        <Left>
+          <Button transparent onPress={() => navigation.navigate('Profile')}>
+            <Icon name="person" />
+          </Button>
+        </Left>
+        <Body>
+          <Title>Home</Title>
+        </Body>
+        <Right>
+          <Button transparent>
+            <Icon name="settings" />
+          </Button>
+        </Right>
+      </Header>
+      <Content padder>
+        <Text>Hello {data.name}</Text>
+        <Button onPress={logout}>
+          <Text>Logout</Text>
+        </Button>
+        <Card transparent style={styles.dashboardCards}>
+          <CardItem cardBody style={styles.cardImg}>
+            <Image source={require('./img/logo.jpeg')} />
+          </CardItem>
+        </Card>
+        <Card transparent style={styles.dashboardCards}>
+          <CardItem
+            button
+            onPress={() => navigation.navigate('Lists')}
+            style={styles.card}>
+            <Icon name="list" />
+            <Text>Lists</Text>
+          </CardItem>
+          <CardItem
+            button
+            onPress={() => navigation.navigate('Location')}
+            style={styles.card}>
+            <Icon name="pin" />
+            <Text>Location</Text>
+          </CardItem>
+          <CardItem button style={styles.card}>
+            <Icon name="calendar" />
+            <Text>Events</Text>
+          </CardItem>
+          <CardItem button style={styles.card}>
+            <Icon name="chatbubbles" />
+            <Text>Chat</Text>
+          </CardItem>
+          <CardItem
+            button
+            onPress={() => navigation.navigate('Group')}
+            style={styles.card}>
+            <Icon name="contacts" />
+            <Text>Groups</Text>
+          </CardItem>
+          <CardItem button style={styles.card}>
+            <Icon name="settings" />
+            <Text>Settings</Text>
+          </CardItem>
+        </Card>
+      </Content>
+      <Footer>
+        <FooterTab>
+          <Button full>
+            <Text>Footer</Text>
+          </Button>
+        </FooterTab>
+      </Footer>
+    </Container>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: 'azure',
+    backgroundColor: '#476B9E',
   },
-  header: {
-    flex: 3,
-    paddingTop: 10,
-    alignItems: 'center',
-  },
-  headerText: {
-    fontSize: 20,
-  },
-  body: {
-    flex: 6,
-    paddingTop: 60,
+  cardImg: {
+    borderColor: '#e1e1e1',
+    borderWidth: 2,
   },
   dashboardCards: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
   },
   card: {
     width: 150,
-    height: 150,
-  },
-  footer: {
-    flex: 1,
-    paddingTop: 20,
-    alignItems: 'center',
+    height: 100,
+    margin: 10,
+    borderRadius: 20,
+    borderColor: '#e1e1e1',
+    borderWidth: 2,
     justifyContent: 'center',
+    backgroundColor: '#f8f8f8',
   },
 });
 

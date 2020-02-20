@@ -1,13 +1,26 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  StyleSheet,
-} from 'react-native';
+import {StyleSheet} from 'react-native';
 
-const UserProfile = () => {
+import {
+  Container,
+  Header,
+  Left,
+  Body,
+  Right,
+  Content,
+  Form,
+  Item,
+  Input,
+  Label,
+  Footer,
+  FooterTab,
+  Button,
+  Icon,
+  Title,
+  Text,
+} from 'native-base';
+
+const UserProfile = ({navigation}) => {
   const [profile, setProfile] = useState({
     firstName: '',
     lastName: '',
@@ -43,52 +56,99 @@ const UserProfile = () => {
     });
   };
 
+  const handleSubmit = () => {
+    fetch('http://localhost:3000/users', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        contact: profile.contact,
+        email: profile.email,
+      }),
+    }).catch(err => {
+      console.log('error msg: ', err);
+    });
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>First Name: </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="First Name"
-        autoCapitalize="words"
-        onChangeText={handleFirstName}
-      />
-
-      <Text>Last Name: </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Last Name"
-        autoCapitalize="words"
-        onChangeText={handleLastName}
-      />
-
-      <Text>Contact: </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Mobile Number"
-        autoCapitalize="none"
-        onChangeText={handleContact}
-      />
-
-      <Text>Email: </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email Address"
-        autoCapitalize="none"
-        onChangeText={handleEmail}
-      />
-
-      <TouchableOpacity
-        style={styles.submitButton}
-        onPress={() => console.log(profile)}>
-        <Text style={styles.submitButtonText}> Submit </Text>
-      </TouchableOpacity>
-    </View>
+    <Container style={styles.container}>
+      <Header>
+        <Left>
+          <Button transparent onPress={() => navigation.navigate('Home')}>
+            <Icon name="home" />
+          </Button>
+        </Left>
+        <Body>
+          <Title>Profile</Title>
+        </Body>
+        <Right>
+          <Button transparent>
+            <Icon name="settings" />
+          </Button>
+        </Right>
+      </Header>
+      <Content padded>
+        <Form>
+          <Item fixedLabel>
+            <Label>First Name: </Label>
+            <Input
+              placeholder="First Name"
+              autoCapitalize="words"
+              onChangeText={handleFirstName}
+            />
+          </Item>
+          <Item fixedLabel>
+            <Label>Last Name: </Label>
+            <Input
+              placeholder="Last Name"
+              autoCapitalize="words"
+              onChangeText={handleLastName}
+            />
+          </Item>
+          <Item fixedLabel>
+            <Label>Contact: </Label>
+            <Input
+              placeholder="Mobile Number"
+              autoCapitalize="none"
+              onChangeText={handleContact}
+            />
+          </Item>
+          <Item fixedLabel>
+            <Label>Email: </Label>
+            <Input
+              placeholder="Email Address"
+              autoCapitalize="none"
+              onChangeText={handleEmail}
+            />
+          </Item>
+        </Form>
+        <Button
+          block
+          info
+          onPress={() => {
+            handleSubmit();
+          }}>
+          <Text>Submit</Text>
+        </Button>
+      </Content>
+      <Footer>
+        <FooterTab>
+          <Button full>
+            <Text>Footer</Text>
+          </Button>
+        </FooterTab>
+      </Footer>
+    </Container>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 23,
+    backgroundColor: '#f8f8f8',
   },
   input: {
     margin: 15,
