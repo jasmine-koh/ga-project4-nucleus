@@ -4,8 +4,9 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import AddNewItem from './components/AddNewItem';
+import AddNewEvent from './components/AddNewEvent';
 import AddNewList from './components/AddNewList';
+import Event from './components/EventHome';
 import Group from './components/Group';
 import GroupDetails from './components/GroupDetails';
 import Home from './components/Home';
@@ -22,13 +23,18 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
-          name="AddNewItem"
-          component={AddNewItem}
+          name="AddNewEvent"
+          component={AddNewEvent}
           options={{headerShown: false}}
         />
         <Stack.Screen
           name="AddNewList"
           component={AddNewList}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Event"
+          component={Event}
           options={{headerShown: false}}
         />
         <Stack.Screen
@@ -52,7 +58,7 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="Details"
+          name="ListDetails"
           component={ListDetails}
           options={{headerShown: false}}
         />

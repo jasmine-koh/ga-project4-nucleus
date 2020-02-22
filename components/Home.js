@@ -97,7 +97,10 @@ const Home = ({route, navigation}) => {
             <Icon name="pin" />
             <Text>Location</Text>
           </CardItem>
-          <CardItem button style={styles.card}>
+          <CardItem
+            button
+            onPress={() => navigation.navigate('Event')}
+            style={styles.card}>
             <Icon name="calendar" />
             <Text>Events</Text>
           </CardItem>

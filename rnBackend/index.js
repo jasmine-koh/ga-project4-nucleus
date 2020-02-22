@@ -11,6 +11,7 @@ const mongoURI = process.env.MONGODB_URI;
 const userController = require('./controllers/userController');
 const listController = require('./controllers/listController');
 const itemController = require('./controllers/itemController');
+const eventController = require('./controllers/eventController');
 
 // mongoose connection
 mongoose.connect(mongoURI, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -25,6 +26,7 @@ app.use(bodyParser.json());
 app.use('/users', userController);
 app.use('/lists', listController);
 app.use('/items', itemController);
+app.use('/events', eventController);
 
 app.listen(PORT, () => {
   console.log('Server is running on port ', PORT);
