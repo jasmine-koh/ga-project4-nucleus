@@ -1,157 +1,164 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, FlatList} from 'react-native';
+
 import {
-  View,
+  Container,
+  Header,
+  Left,
+  Body,
+  Right,
+  Content,
+  Form,
+  Item,
+  Input,
+  Label,
+  ListItem,
+  CheckBox,
+  Footer,
+  FooterTab,
+  Button,
+  Icon,
+  Title,
   Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  Alert,
-  FlatList,
-} from 'react-native';
+} from 'native-base';
 
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {uuid} from 'uuidv4';
-
-// AddItemComponent - where users type
-const AddItemComponent = ({addItem}) => {
-  const [text, setText] = useState('');
-  const onChange = textValue => setText(textValue);
-
-  return (
-    <View>
-      <TextInput
-        placeholder="Add a new item..."
-        style={styles.input}
-        onChangeText={onChange}
-        value={text}
-      />
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={() => {
-          addItem(text);
-          setText('');
-        }}>
-        <Text style={styles.btnText}>
-          <Icon name="plus" size={20} />
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-// Displays items in a list
-const Items = ({item, deleteItem}) => {
-  return (
-    <TouchableOpacity style={styles.listItem}>
-      <View style={styles.listItemView}>
-        <Text style={styles.listItemText}>{item.name}</Text>
-        <Icon
-          name="remove"
-          size={20}
-          color="firebrick"
-          onPress={() => deleteItem(item.id)}
-        />
-      </View>
-    </TouchableOpacity>
-  );
-};
-
+// ADD 'ITEM into LIST' COMPONENT
 const ListDetails = ({route, navigation}) => {
   const {list} = route.params;
 
-  const newItemsArray = [];
+  const [text, setText] = useState('');
 
-  const [items, setItems] = useState([
-    {id: uuid(), list: 'Grocery List', name: 'Milk'},
-    {id: uuid(), list: 'Grocery List', name: 'Eggs'},
-    {id: uuid(), list: 'Todo', name: 'Tea'},
-    {id: uuid(), list: 'Todo', name: 'Bread'},
-  ]);
+  const [item, setItem] = useState([]);
 
-  console.log(list);
+  useEffect(() => {
+    getItemFetch();
+  }, []);
 
-  // Function to check if item belongs in a list
-  const isInList = () => {
-    for (let i = 0; i < items.length; i++) {
-      if (list.name == items[i].list) {
-        newItemsArray.push(items[i]);
-      }
-    }
-  };
-
-  //   Function to check and add a list
-  const addItem = text => {
-    if (!text) {
-      Alert.alert('Error', 'Please enter an item', {text: 'Ok'});
-    } else {
-      setItems(previousItem => {
-        return [{id: uuid(), list: list.name, name: text}, ...previousItem];
+  // get all items in database
+  const getItemFetch = () => {
+    fetch('http://localhost:3000/items')
+      .then(res => res.json())
+      .then(data => {
+        data.map(item => {
+          if (item.listId == list._id) {
+            setItem(prevState => {
+              return [item, ...prevState];
+            });
+          }
+        });
       });
-    }
   };
 
-  //   Function to delete a list
+  // ====== DELETE ========
+  // delete item in state
   const deleteItem = id => {
-    setItems(previousItem => {
-      return previousItem.filter(item => item.id != id);
-    });
+    deleteItemFetch(id);
+    setItem([]);
+    getItemFetch();
   };
 
-  isInList();
-  return (
-    <View>
-      <View style={styles.listDetailsHeaderView}>
-        <Text style={styles.listDetailsHeader}>{list.name}</Text>
-      </View>
+  // delete item in database
+  const deleteItemFetch = id => {
+    fetch('http://localhost:3000/items/' + id, {
+      method: 'DELETE',
+    })
+      .then(res => res.text()) // or res.json()
+      .then(res => console.log(res));
+  };
 
-      <FlatList
-        data={newItemsArray}
-        renderItem={({item}) => <Items item={item} deleteItem={deleteItem} />}
-      />
-      <AddItemComponent addItem={addItem} />
-    </View>
+  // ====== ADD ======
+  // add item into database
+  const addItemFetch = text => {
+    fetch('http://localhost:3000/items', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: text,
+        status: false,
+        listName: list.name,
+        listId: list._id,
+      }),
+    }).catch(err => {
+      console.log('error msg: ', err);
+    });
+    getItemFetch();
+  };
+
+  // ====== HANDLERS ======
+  const onChange = textValue => {
+    setText(textValue);
+  };
+
+  const handleAllAdd = text => {
+    // handleAddItem(text);
+    addItemFetch(text);
+    setItem([]);
+  };
+
+  return (
+    <Container>
+      <Header>
+        <Left>
+          <Button transparent onPress={() => navigation.navigate('Home')}>
+            <Icon name="home" />
+          </Button>
+        </Left>
+        <Body>
+          <Title>{list.name}</Title>
+        </Body>
+        <Right>
+          <Button transparent>
+            <Icon name="checkmark" />
+          </Button>
+        </Right>
+      </Header>
+      <Content padded>
+        <Form>
+          <Item>
+            <Label>Item: </Label>
+            <Input
+              placeholder="Add a new item into the list"
+              onChangeText={onChange}
+              value={text}
+            />
+            <Button
+              transparent
+              onPress={() => {
+                handleAllAdd(text);
+                setText('');
+              }}>
+              <Icon name="add"></Icon>
+            </Button>
+          </Item>
+        </Form>
+        <FlatList
+          data={item}
+          renderItem={({item}) => (
+            <ListItem>
+              <CheckBox checked={item.status} />
+              <Body>
+                <Text>{item.name}</Text>
+                <Text>{item._id}</Text>
+              </Body>
+              <Right>
+                <Icon name="close" onPress={() => deleteItem(item._id)} />
+              </Right>
+            </ListItem>
+          )}
+        />
+      </Content>
+      <Footer>
+        <FooterTab>
+          <Button full>
+            <Text>Footer</Text>
+          </Button>
+        </FooterTab>
+      </Footer>
+    </Container>
   );
 };
-
-// CSS
-const styles = StyleSheet.create({
-  listItem: {
-    padding: 15,
-    backgroundColor: '#f8f8f8',
-    borderBottomWidth: 1,
-    borderColor: '#eee',
-  },
-  listItemView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  listItemText: {
-    fontSize: 18,
-  },
-  input: {
-    height: 60,
-    padding: 8,
-    fontSize: 16,
-  },
-  btn: {
-    backgroundColor: '#c2bad8',
-    padding: 9,
-    margin: 5,
-  },
-  btnText: {
-    color: 'darkslateblue',
-    fontSize: 20,
-    textAlign: 'center',
-  },
-  listDetailsHeaderView: {
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#eee',
-  },
-  listDetailsHeader: {
-    fontSize: 30,
-  },
-});
 
 export default ListDetails;

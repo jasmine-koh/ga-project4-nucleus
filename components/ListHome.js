@@ -17,47 +17,42 @@ import {
   Text,
 } from 'native-base';
 
-// Displays lists created
-const Listing = ({list, deleteList, navigation}) => {
-  return (
-    <ListItem
-      style={styles.items}
-      button
-      onPress={() =>
-        navigation.navigate('AddNewItem', {
-          list,
-        })
-      }>
-      <Text>{list.name}</Text>
-      <Icon name="close" onPress={() => deleteList(list.id)} />
-    </ListItem>
-  );
-};
-
 const Lists = ({navigation}) => {
-  const [lists, setLists] = useState({
-    dataSource: [],
-  });
+  const [lists, setLists] = useState([]);
 
   useEffect(() => {
+    getListFetch();
+  }, []);
+
+  // get all lists in database
+  const getListFetch = () => {
     fetch('http://localhost:3000/lists')
       .then(res => res.json())
       .then(data => {
-        setLists({
-          dataSource: data,
+        data.map(item => {
+          setLists(prevState => {
+            return [...prevState, item];
+          });
         });
       });
-  }, []);
-
-  // TO FIX: DELETE FUNTION
-  //   Function to delete a list
-  const deleteList = id => {
-    setLists(previousItem => {
-      return previousItem.filter(item => item.id != id);
-    });
   };
 
-  console.log(lists.dataSource[0]);
+  //   Function to delete a list
+
+  const deleteListFetch = id => {
+    fetch('http://localhost:3000/lists/' + id, {
+      method: 'DELETE',
+    })
+      .then(res => res.text()) // or res.json()
+      .then(res => console.log(res));
+  };
+
+  const deleteList = id => {
+    deleteListFetch(id);
+    setLists([]);
+    getListFetch();
+  };
+
   return (
     <Container style={styles.container}>
       <Header>
@@ -77,13 +72,19 @@ const Lists = ({navigation}) => {
       </Header>
       <Content padder>
         <FlatList
-          data={lists.dataSource}
+          data={lists}
           renderItem={({item}) => (
-            <Listing
-              list={item}
-              navigation={navigation}
-              deleteList={deleteList}
-            />
+            <ListItem
+              style={styles.items}
+              button
+              onPress={() =>
+                navigation.navigate('ListDetails', {
+                  list: item,
+                })
+              }>
+              <Text>{item.name}</Text>
+              <Icon name="close" onPress={() => deleteList(item._id)} />
+            </ListItem>
           )}
         />
       </Content>

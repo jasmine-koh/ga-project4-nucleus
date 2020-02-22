@@ -29,10 +29,10 @@ lists.post('/', (req, res) => {
 lists.delete('/:id', (req, res) => {
   models.List.findByIdAndDelete(req.params.id, (err, data) => {
     if (err) {
-      console.lof(err);
+      console.log(err);
     }
     console.log('delete: ', data);
-    res.send(deleted);
+    res.send('deleted');
   });
 });
 

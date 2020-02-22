@@ -13,6 +13,16 @@ items.get('/', (req, res) => {
   });
 });
 
+items.get('/:id', (req, res) => {
+  models.ListItem.findById(req.params.id, (err, item) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log(item);
+    res.send(item);
+  });
+});
+
 // add a new item into 'ITEMS' collection
 items.post('/', (req, res) => {
   models.ListItem.create(req.body, (err, createdItem) => {
@@ -21,6 +31,16 @@ items.post('/', (req, res) => {
     }
     console.log(createdItem);
     res.send('item added');
+  });
+});
+
+items.delete('/:id', (req, res) => {
+  models.ListItem.findByIdAndDelete(req.params.id, (err, data) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log('delete: ', data);
+    res.send('deleted');
   });
 });
 
