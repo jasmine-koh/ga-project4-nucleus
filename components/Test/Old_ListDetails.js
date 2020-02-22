@@ -68,8 +68,6 @@ const ListDetails = ({route, navigation}) => {
     {id: uuid(), list: 'Todo', name: 'Bread'},
   ]);
 
-  console.log(list);
-
   // Function to check if item belongs in a list
   const isInList = () => {
     for (let i = 0; i < items.length; i++) {

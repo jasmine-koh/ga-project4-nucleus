@@ -12,15 +12,16 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {uuid} from 'uuidv4';
 
-// AddItemComponent - where users type
-const AddItemComponent = ({addItem}) => {
+// AddListComponent - where users type
+const AddListComponent = ({addList}) => {
   const [text, setText] = useState('');
+
   const onChange = textValue => setText(textValue);
 
   return (
     <View>
       <TextInput
-        placeholder="Add a new item..."
+        placeholder="Add a new list..."
         style={styles.input}
         onChangeText={onChange}
         value={text}
@@ -28,7 +29,7 @@ const AddItemComponent = ({addItem}) => {
       <TouchableOpacity
         style={styles.btn}
         onPress={() => {
-          addItem(text);
+          addList(text);
           setText('');
         }}>
         <Text style={styles.btnText}>
@@ -39,81 +40,75 @@ const AddItemComponent = ({addItem}) => {
   );
 };
 
-// Displays items in a list
-const Items = ({item, deleteItem}) => {
+// Displays lists created
+const Listing = ({list, deleteList, navigation}) => {
   return (
     <TouchableOpacity style={styles.listItem}>
       <View style={styles.listItemView}>
-        <Text style={styles.listItemText}>{item.name}</Text>
+        <Text
+          onPress={() =>
+            navigation.navigate('Details', {
+              list,
+            })
+          }
+          style={styles.listItemText}>
+          {list.name}
+        </Text>
         <Icon
           name="remove"
           size={20}
           color="firebrick"
-          onPress={() => deleteItem(item.id)}
+          onPress={() => deleteList(list.id)}
         />
       </View>
     </TouchableOpacity>
   );
 };
 
-const ListDetails = ({route, navigation}) => {
-  const {list} = route.params;
-
-  const newItemsArray = [];
-
-  const [items, setItems] = useState([
-    {id: uuid(), list: 'Grocery List', name: 'Milk'},
-    {id: uuid(), list: 'Grocery List', name: 'Eggs'},
-    {id: uuid(), list: 'Todo', name: 'Tea'},
-    {id: uuid(), list: 'Todo', name: 'Bread'},
+const Lists = ({navigation}) => {
+  const [lists, setLists] = useState([
+    {id: uuid(), name: 'Grocery List'},
+    {id: uuid(), name: 'Todo'},
   ]);
 
-  console.log(list);
-
-  // Function to check if item belongs in a list
-  const isInList = () => {
-    for (let i = 0; i < items.length; i++) {
-      if (list.name == items[i].list) {
-        newItemsArray.push(items[i]);
-      }
-    }
-  };
-
   //   Function to check and add a list
-  const addItem = text => {
+  const addList = text => {
     if (!text) {
-      Alert.alert('Error', 'Please enter an item', {text: 'Ok'});
+      Alert.alert('Error', 'Please enter a list', {text: 'Ok'});
     } else {
-      setItems(previousItem => {
-        return [{id: uuid(), list: list.name, name: text}, ...previousItem];
+      setLists(previousItem => {
+        return [{id: uuid(), name: text}, ...previousItem];
       });
     }
   };
 
   //   Function to delete a list
-  const deleteItem = id => {
-    setItems(previousItem => {
+  const deleteList = id => {
+    setLists(previousItem => {
       return previousItem.filter(item => item.id != id);
     });
   };
 
-  isInList();
   return (
     <View>
-      <View style={styles.listDetailsHeaderView}>
-        <Text style={styles.listDetailsHeader}>{list.name}</Text>
+      <View style={styles.listsHeaderView}>
+        <Text style={styles.listsHeader}>Lists</Text>
       </View>
-
       <FlatList
-        data={newItemsArray}
-        renderItem={({item}) => <Items item={item} deleteItem={deleteItem} />}
+        data={lists}
+        renderItem={({item}) => (
+          <Listing
+            list={item}
+            navigation={navigation}
+            deleteList={deleteList}
+          />
+        )}
       />
-      <AddItemComponent addItem={addItem} />
+      <AddListComponent addList={addList} />
     </View>
   );
 };
 
-// CSS
 const styles = StyleSheet.create({
   listItem: {
     padding: 15,
@@ -144,14 +139,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
   },
-  listDetailsHeaderView: {
+  listsHeaderView: {
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#eee',
   },
-  listDetailsHeader: {
+  listsHeader: {
     fontSize: 30,
   },
 });
 
-export default ListDetails;
+export default Lists;

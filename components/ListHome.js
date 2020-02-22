@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 
 import {
@@ -8,7 +8,6 @@ import {
   Body,
   Right,
   Content,
-  List,
   ListItem,
   Footer,
   FooterTab,
@@ -18,33 +17,39 @@ import {
   Text,
 } from 'native-base';
 
-import {uuid} from 'uuidv4';
-
 // Displays lists created
 const Listing = ({list, deleteList, navigation}) => {
   return (
-    <List>
-      <ListItem
-        style={styles.items}
-        button
-        onPress={() =>
-          navigation.navigate('Details', {
-            list,
-          })
-        }>
-        <Text>{list.name}</Text>
-        <Icon name="close" onPress={() => deleteList(list.id)} />
-      </ListItem>
-    </List>
+    <ListItem
+      style={styles.items}
+      button
+      onPress={() =>
+        navigation.navigate('AddNewItem', {
+          list,
+        })
+      }>
+      <Text>{list.name}</Text>
+      <Icon name="close" onPress={() => deleteList(list.id)} />
+    </ListItem>
   );
 };
 
 const Lists = ({navigation}) => {
-  const [lists, setLists] = useState([
-    {id: uuid(), name: 'Grocery List'},
-    {id: uuid(), name: 'Todo'},
-  ]);
+  const [lists, setLists] = useState({
+    dataSource: [],
+  });
 
+  useEffect(() => {
+    fetch('http://localhost:3000/lists')
+      .then(res => res.json())
+      .then(data => {
+        setLists({
+          dataSource: data,
+        });
+      });
+  }, []);
+
+  // TO FIX: DELETE FUNTION
   //   Function to delete a list
   const deleteList = id => {
     setLists(previousItem => {
@@ -52,6 +57,7 @@ const Lists = ({navigation}) => {
     });
   };
 
+  console.log(lists.dataSource[0]);
   return (
     <Container style={styles.container}>
       <Header>
@@ -64,14 +70,14 @@ const Lists = ({navigation}) => {
           <Title>Lists</Title>
         </Body>
         <Right>
-          <Button transparent onPress={() => navigation.navigate('AddList')}>
+          <Button transparent onPress={() => navigation.navigate('AddNewList')}>
             <Icon name="add" />
           </Button>
         </Right>
       </Header>
       <Content padder>
         <FlatList
-          data={lists}
+          data={lists.dataSource}
           renderItem={({item}) => (
             <Listing
               list={item}

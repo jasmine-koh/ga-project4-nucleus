@@ -4,6 +4,8 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
+import AddNewItem from './components/AddNewItem';
+import AddNewList from './components/AddNewList';
 import Group from './components/Group';
 import GroupDetails from './components/GroupDetails';
 import Home from './components/Home';
@@ -19,6 +21,16 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen
+          name="AddNewItem"
+          component={AddNewItem}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AddNewList"
+          component={AddNewList}
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name="Group"
           component={Group}
