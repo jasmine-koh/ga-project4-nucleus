@@ -18,26 +18,38 @@ import {
 } from 'native-base';
 
 const Events = ({navigation}) => {
-  const [events, setEvents] = useState({
-    dataSource: [],
-  });
+  const [events, setEvents] = useState([]);
 
   useEffect(() => {
+    getEventFetch();
+  }, []);
+
+  // get all lists in database
+  const getEventFetch = () => {
     fetch('http://localhost:3000/events')
       .then(res => res.json())
       .then(data => {
-        setEvents({
-          dataSource: data,
+        data.map(item => {
+          setEvents(prevState => {
+            return [...prevState, item];
+          });
         });
       });
-  }, []);
+  };
 
-  // TO FIX: DELETE FUNTION
   //   Function to delete a list
-  const deleteList = id => {
-    setLists(previousItem => {
-      return previousItem.filter(item => item.id != id);
-    });
+  const deleteEventFetch = id => {
+    fetch('http://localhost:3000/events/' + id, {
+      method: 'DELETE',
+    })
+      .then(res => res.text()) // or res.json()
+      .then(res => console.log(res));
+  };
+
+  const deleteEvent = id => {
+    deleteEventFetch(id);
+    setEvents([]);
+    getEventFetch();
   };
 
   return (
@@ -61,18 +73,18 @@ const Events = ({navigation}) => {
       </Header>
       <Content padder>
         <FlatList
-          data={events.dataSource}
+          data={events}
           renderItem={({item}) => (
             <ListItem
               style={styles.items}
               buttons
               onPress={() =>
-                navigation.navigate('AddNewEvent', {
-                  event: item,
+                navigation.navigate('EventDetails', {
+                  event: item._id,
                 })
               }>
               <Text>{item.name}</Text>
-              <Icon name="close" onPress={() => deleteList(item.id)} />
+              <Icon name="close" onPress={() => deleteEvent(item._id)} />
             </ListItem>
           )}
         />

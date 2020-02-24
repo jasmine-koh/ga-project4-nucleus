@@ -38,7 +38,6 @@ const Lists = ({navigation}) => {
   };
 
   //   Function to delete a list
-
   const deleteListFetch = id => {
     fetch('http://localhost:3000/lists/' + id, {
       method: 'DELETE',

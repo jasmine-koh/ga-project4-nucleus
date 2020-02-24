@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Platform, StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, FlatList} from 'react-native';
 
 import {
   Container,
@@ -8,72 +8,94 @@ import {
   Body,
   Right,
   Content,
+  Form,
+  Item,
+  Input,
+  Label,
   Footer,
   FooterTab,
   Button,
   Icon,
   Title,
   Text,
-  Form,
-  Item,
-  Input,
-  Label,
 } from 'native-base';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-// ADD 'EVENT' COMPONENT
-const AddNewEvent = ({navigation}) => {
-  const [event, setEvent] = useState({
-    name: '',
-    description: '',
-    group: '',
-    location: '',
-    time: '',
-    date: '',
-  });
+const EventDetails = ({route, navigation}) => {
+  const {event} = route.params;
 
-  // toggle calendar on/off
+  const [detail, setDetail] = useState({});
   const [show, setShow] = useState(false);
-  const [date, setDate] = useState(new Date(1598051730000));
 
-  const handleEventName = text => {
+  useEffect(() => {
+    getEventDetailsFetch();
+  }, []);
+
+  // get the event in database
+  const getEventDetailsFetch = () => {
+    fetch('http://localhost:3000/events/' + event)
+      .then(res => res.json())
+      .then(data => setDetail(data));
+  };
+
+  // update the event in database
+  const editEventFetch = () => {
+    fetch('http://localhost:3000/events' + event, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: detail.name,
+        description: detail.description,
+        location: detail.location,
+        date: detail.date,
+        time: detail.time,
+      }),
+    }).catch(err => {
+      console.log('error msg: ', err);
+    });
+  };
+
+  const handleSubmit = () => {
+    editEventFetch();
+  };
+
+  const handleName = text => {
     name = text;
-    setEvent(prevState => {
+    setDetail(prevState => {
       return {...prevState, name};
     });
   };
 
   const handleDescription = text => {
     description = text;
-    setEvent(prevState => {
+    setDetail(prevState => {
       return {...prevState, description};
     });
   };
 
   const handleLocation = text => {
     location = text;
-    setEvent(prevState => {
+    setDetail(prevState => {
       return {...prevState, location};
     });
   };
 
   const handleTime = text => {
     time = text;
-    setEvent(prevState => {
+    setDetail(prevState => {
       return {...prevState, time};
     });
   };
 
   const handleDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-
-    setDate(currentDate);
-
     const date = currentDate.toDateString();
-    console.log(date);
 
-    setEvent(prevState => {
+    setDetail(prevState => {
       return {...prevState, date};
     });
 
@@ -82,29 +104,6 @@ const AddNewEvent = ({navigation}) => {
 
   const showDatePicker = () => {
     setShow(!show);
-  };
-
-  const addEventFetch = () => {
-    fetch('http://localhost:3000/events', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: event.name,
-        description: event.description,
-        location: event.location,
-        date: event.date,
-        time: event.time,
-      }),
-    }).catch(err => {
-      console.log('error msg: ', err);
-    });
-  };
-
-  const handleSubmit = () => {
-    addEventFetch();
   };
 
   return (
@@ -116,7 +115,7 @@ const AddNewEvent = ({navigation}) => {
           </Button>
         </Left>
         <Body>
-          <Title>New Event</Title>
+          <Title>{event.name}</Title>
         </Body>
         <Right>
           <Button
@@ -135,24 +134,37 @@ const AddNewEvent = ({navigation}) => {
             <Label>Name: </Label>
             <Input
               placeholder="Event name, of course!"
-              onChangeText={handleEventName}
+              value={detail.name}
+              onChangeText={handleName}
             />
           </Item>
           <Item fixedLabel>
             <Label>Description: </Label>
-            <Input placeholder="What?!" onChangeText={handleDescription} />
+            <Input
+              placeholder="What?!"
+              value={detail.description}
+              onChangeText={handleDescription}
+            />
           </Item>
           <Item fixedLabel>
             <Label>Location: </Label>
-            <Input placeholder="Where?!" onChangeText={handleLocation} />
+            <Input
+              placeholder="Where?!"
+              value={detail.location}
+              onChangeText={handleLocation}
+            />
           </Item>
           <Item fixedLabel>
             <Label>Time: </Label>
-            <Input placeholder="Time?!" onChangeText={handleTime} />
+            <Input
+              placeholder="Time?!"
+              value={detail.time}
+              onChangeText={handleTime}
+            />
           </Item>
           <Item fixedLabel>
             <Label>Date: </Label>
-            <Input disabled={true} value={date} />
+            <Input value={detail.date} />
             <Button
               transparent
               onPress={showDatePicker}
@@ -176,4 +188,4 @@ const AddNewEvent = ({navigation}) => {
   );
 };
 
-export default AddNewEvent;
+export default EventDetails;
