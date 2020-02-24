@@ -7,6 +7,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import AddNewEvent from './components/AddNewEvent';
 import AddNewGroup from './components/AddNewGroup';
 import AddNewList from './components/AddNewList';
+import AllContacts from './components/Contacts';
 import Event from './components/EventHome';
 import EventDetails from './components/EventDetails';
 import Group from './components/Group';
@@ -37,6 +38,11 @@ const App = () => {
         <Stack.Screen
           name="AddNewList"
           component={AddNewList}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AllContacts"
+          component={AllContacts}
           options={{headerShown: false}}
         />
         <Stack.Screen

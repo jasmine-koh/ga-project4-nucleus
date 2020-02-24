@@ -115,7 +115,10 @@ const Home = ({route, navigation}) => {
             <Icon name="contacts" />
             <Text>Groups</Text>
           </CardItem>
-          <CardItem button style={styles.card}>
+          <CardItem
+            button
+            onPress={() => navigation.navigate('ABC')}
+            style={styles.card}>
             <Icon name="settings" />
             <Text>Settings</Text>
           </CardItem>

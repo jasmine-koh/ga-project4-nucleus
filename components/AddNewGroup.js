@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, FlatList, Platform, PermissionsAndroid} from 'react-native';
 
 import {
   Container,
@@ -18,8 +18,11 @@ import {
   Icon,
   Title,
   Text,
-  Switch,
+  ListItem,
+  CheckBox,
 } from 'native-base';
+
+import Contacts from 'react-native-contacts';
 
 // ADD 'GROUP' COMPONENT
 const AddNewGroup = ({navigation}) => {
@@ -29,6 +32,45 @@ const AddNewGroup = ({navigation}) => {
     members: [],
   });
 
+  const [contacts, setContacts] = useState([]);
+
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    getUsersFetch();
+    permission();
+  }, []);
+
+  // get contact list from phone
+  const permission = () => {
+    if (Platform.OS === 'android') {
+      PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
+        title: 'Contacts',
+        message: ' This app would like to see your contacts',
+      }).then(() => {
+        getList();
+      });
+    } else if (Platform.OS === 'ios') {
+      getList();
+    }
+  };
+
+  const getList = () => {
+    Contacts.getAll((err, allContacts) => {
+      if (err === 'denied') {
+        console.log('cannot access');
+      } else {
+        console.log(users);
+        allContacts.map(item => {
+          setContacts(prevState => {
+            return [...prevState, item];
+          });
+        });
+      }
+    });
+  };
+
+  // Functions
   const handleName = text => {
     name = text;
     setGroup(prevState => {
@@ -41,6 +83,21 @@ const AddNewGroup = ({navigation}) => {
     setGroup(prevState => {
       return {...prevState, description};
     });
+  };
+
+  const handleSubmit = () => {
+    addGroupFetch();
+  };
+
+  // Database
+
+  // get all users in database
+  const getUsersFetch = () => {
+    fetch('http://localhost:3000/users')
+      .then(res => res.json())
+      .then(data => {
+        setUsers(data);
+      });
   };
 
   const addGroupFetch = () => {
@@ -57,10 +114,6 @@ const AddNewGroup = ({navigation}) => {
     }).catch(err => {
       console.log('error msg: ', err);
     });
-  };
-
-  const handleSubmit = () => {
-    addGroupFetch();
   };
 
   return (
@@ -101,6 +154,20 @@ const AddNewGroup = ({navigation}) => {
             <Input placeholder="Description" onChangeText={handleDescription} />
           </Item>
         </Form>
+        <FlatList
+          data={contacts}
+          renderItem={({item}) => (
+            <ListItem>
+              <CheckBox />
+              <Body>
+                <Text>
+                  {`${item.givenName} `}
+                  {item.familyName}
+                </Text>
+              </Body>
+            </ListItem>
+          )}
+        />
       </Content>
       <Footer>
         <FooterTab>
@@ -112,5 +179,15 @@ const AddNewGroup = ({navigation}) => {
     </Container>
   );
 };
+
+const styles = StyleSheet.create({
+  itemContainer: {
+    margin: 10,
+  },
+  contactName: {
+    fontSize: 16,
+    color: 'blue',
+  },
+});
 
 export default AddNewGroup;
