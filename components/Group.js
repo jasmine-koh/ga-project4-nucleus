@@ -1,150 +1,115 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import {FlatList, StyleSheet} from 'react-native';
 
 import {
-  View,
+  Container,
+  Header,
+  Left,
+  Body,
+  Right,
+  Content,
+  ListItem,
+  Footer,
+  FooterTab,
+  Button,
+  Icon,
+  Title,
   Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  FlatList,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {uuid} from 'uuidv4';
+} from 'native-base';
 
-// Create group - where users type
-const CreateNucleus = ({addNucleus}) => {
-  const [text, setText] = useState('');
+const Groups = ({navigation}) => {
+  const [groups, setGroups] = useState([]);
 
-  const onChange = textValue => setText(textValue);
+  useEffect(() => {
+    getGroupFetch();
+  }, []);
 
-  return (
-    <View>
-      <TextInput
-        placeholder="Create a new nucleus..."
-        style={styles.input}
-        onChangeText={onChange}
-        value={text}
-      />
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={() => {
-          addNucleus(text);
-          setText('');
-        }}>
-        <Text style={styles.btnText}>
-          <Icon name="plus" size={20} />
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-const ListNucleus = ({group, deleteNucleus, navigation}) => {
-  return (
-    <TouchableOpacity style={styles.listItem}>
-      <View style={styles.listItemView}>
-        <Text
-          onPress={() =>
-            navigation.navigate('GroupDetails', {
-              group,
-            })
-          }
-          style={styles.listItemText}>
-          {group.name}
-        </Text>
-        <Icon
-          name="remove"
-          size={20}
-          color="firebrick"
-          onPress={() => deleteNucleus(group.id)}
-        />
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-const Group = ({navigation}) => {
-  const [group, setGroup] = useState([
-    {id: uuid(), name: 'Family'},
-    {id: uuid(), name: 'Work'},
-  ]);
-
-  //   Function to check and add a group
-  const addNucleus = text => {
-    if (!text) {
-      Alert.alert('Error', 'Please enter a Nucleus', {text: 'Ok'});
-    } else {
-      setGroup(previousItem => {
-        return [{id: uuid(), name: text}, ...previousItem];
+  // get all lists in database
+  const getGroupFetch = () => {
+    fetch('http://localhost:3000/groups')
+      .then(res => res.json())
+      .then(data => {
+        data.map(item => {
+          setGroups(prevState => {
+            return [...prevState, item];
+          });
+        });
       });
-    }
   };
 
-  //   Function to delete a Nucleus
-  const deleteNucleus = id => {
-    setGroup(previousItem => {
-      return previousItem.filter(item => item.id != id);
-    });
+  //   Function to delete a list
+  const deleteGroupFetch = id => {
+    fetch('http://localhost:3000/groups/' + id, {
+      method: 'DELETE',
+    })
+      .then(res => res.text()) // or res.json()
+      .then(res => console.log(res));
+  };
+
+  const deleteGroup = id => {
+    deleteGroupFetch(id);
+    setGroups([]);
+    getGroupFetch();
   };
 
   return (
-    <View>
-      <View style={styles.listsHeaderView}>
-        <Text style={styles.listsHeader}>Groups</Text>
-      </View>
-      <FlatList
-        data={group}
-        renderItem={({item}) => (
-          <ListNucleus
-            group={item}
-            navigation={navigation}
-            deleteNucleus={deleteNucleus}
-          />
-        )}
-      />
-      <CreateNucleus addNucleus={addNucleus} />
-    </View>
+    <Container style={styles.container}>
+      <Header>
+        <Left>
+          <Button transparent onPress={() => navigation.navigate('Home')}>
+            <Icon name="arrow-back" />
+          </Button>
+        </Left>
+        <Body>
+          <Title>Groups</Title>
+        </Body>
+        <Right>
+          <Button
+            transparent
+            onPress={() => navigation.navigate('AddNewGroup')}>
+            <Icon name="add" />
+          </Button>
+        </Right>
+      </Header>
+      <Content padder>
+        <FlatList
+          data={groups}
+          renderItem={({item}) => (
+            <ListItem
+              style={styles.items}
+              buttons
+              onPress={() =>
+                navigation.navigate('GroupDetails', {
+                  groupID: item._id,
+                })
+              }>
+              <Text>{item.name}</Text>
+              <Icon name="close" onPress={() => deleteGroup(item._id)} />
+            </ListItem>
+          )}
+        />
+      </Content>
+      <Footer>
+        <FooterTab>
+          <Button full>
+            <Text>Footer</Text>
+          </Button>
+        </FooterTab>
+      </Footer>
+    </Container>
   );
 };
 
 const styles = StyleSheet.create({
-  listItem: {
-    padding: 15,
+  container: {
     backgroundColor: '#f8f8f8',
-    borderBottomWidth: 1,
-    borderColor: '#eee',
   },
-  listItemView: {
+  items: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  listItemText: {
-    fontSize: 18,
-  },
-  input: {
-    height: 60,
-    padding: 8,
-    fontSize: 16,
-  },
-  btn: {
-    backgroundColor: '#c2bad8',
-    padding: 9,
-    margin: 5,
-  },
-  btnText: {
-    color: 'darkslateblue',
-    fontSize: 20,
-    textAlign: 'center',
-  },
-  listsHeaderView: {
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#eee',
-  },
-  listsHeader: {
-    fontSize: 30,
   },
 });
 
-export default Group;
+export default Groups;

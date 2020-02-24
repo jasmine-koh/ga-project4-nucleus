@@ -1,98 +1,124 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, FlatList} from 'react-native';
 
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {uuid} from 'uuidv4';
+import {
+  Container,
+  Header,
+  Left,
+  Body,
+  Right,
+  Content,
+  Form,
+  Item,
+  Input,
+  Label,
+  ListItem,
+  CheckBox,
+  Footer,
+  FooterTab,
+  Button,
+  Icon,
+  Title,
+  Text,
+} from 'native-base';
 
-// Displays members in a nucleus
-const Users = ({members, deleteMember}) => {
-  return (
-    <TouchableOpacity style={styles.listItem}>
-      <View style={styles.listItemView}>
-        <Text style={styles.listItemText}>{members.name}</Text>
-        <Icon
-          name="remove"
-          size={20}
-          color="firebrick"
-          onPress={() => deleteMember(members.id)}
-        />
-      </View>
-    </TouchableOpacity>
-  );
-};
-
+// ADD 'ITEM into LIST' COMPONENT
 const GroupDetails = ({route, navigation}) => {
-  const {group} = route.params;
+  const {groupID} = route.params;
 
-  const [members, setMembers] = useState([
-    {id: uuid(), group: 'Family', name: 'Amy'},
-    {id: uuid(), group: 'Family', name: 'Mary'},
-    {id: uuid(), group: 'Work', name: 'Harry'},
-    {id: uuid(), group: 'Work', name: 'Ron'},
-  ]);
+  const [group, setGroup] = useState({});
 
-  //   Function to delete a list
-  const deleteMember = id => {
-    setMembers(previousItem => {
-      return previousItem.filter(item => item.id != id);
-    });
+  useEffect(() => {
+    getGroupFetch();
+  }, []);
+
+  // get all items in database
+  const getGroupFetch = () => {
+    fetch('http://localhost:3000/groups/' + groupID)
+      .then(res => res.json())
+      .then(data => setGroup(data));
   };
 
-  return (
-    <View>
-      <View style={styles.listDetailsHeaderView}>
-        <Text style={styles.listDetailsHeader}>{group.name}</Text>
-      </View>
+  // ====== DELETE ========
+  // delete member in state
+  // const deleteItem = id => {
+  //   deleteItemFetch(id);
+  //   setItem([]);
+  //   getItemFetch();
+  // };
 
-      <FlatList
-        data={members}
-        renderItem={({item}) => (
-          <Users members={item} deleteMember={deleteMember} />
-        )}
-      />
-    </View>
+  // delete member in database
+  // const deleteItemFetch = id => {
+  //   fetch('http://localhost:3000/items/' + id, {
+  //     method: 'DELETE',
+  //   })
+  //     .then(res => res.text()) // or res.json()
+  //     .then(res => console.log(res));
+  // };
+
+  // ====== ADD ======
+  // add member into database
+  // const addItemFetch = text => {
+  //   fetch('http://localhost:3000/items', {
+  //     method: 'POST',
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       name: text,
+  //       status: false,
+  //       listName: list.name,
+  //       listId: list._id,
+  //     }),
+  //   }).catch(err => {
+  //     console.log('error msg: ', err);
+  //   });
+  //   getItemFetch();
+  // };
+
+  // ====== HANDLERS ======
+  // const onChange = textValue => {
+  //   setText(textValue);
+  // };
+
+  // const handleAllAdd = text => {
+  //   // handleAddItem(text);
+  //   addItemFetch(text);
+  //   setItem([]);
+  // };
+
+  return (
+    <Container>
+      <Header>
+        <Left>
+          <Button transparent onPress={() => navigation.navigate('Home')}>
+            <Icon name="home" />
+          </Button>
+        </Left>
+        <Body>
+          <Title>{group.name}</Title>
+        </Body>
+        <Right>
+          <Button transparent>
+            <Icon name="checkmark" />
+          </Button>
+        </Right>
+      </Header>
+      <Content padded>
+        <ListItem>
+          <Text>Description: {group.description}</Text>
+        </ListItem>
+      </Content>
+      <Footer>
+        <FooterTab>
+          <Button full>
+            <Text>Footer</Text>
+          </Button>
+        </FooterTab>
+      </Footer>
+    </Container>
   );
 };
-
-// CSS
-const styles = StyleSheet.create({
-  listItem: {
-    padding: 15,
-    backgroundColor: '#f8f8f8',
-    borderBottomWidth: 1,
-    borderColor: '#eee',
-  },
-  listItemView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  listItemText: {
-    fontSize: 18,
-  },
-  input: {
-    height: 60,
-    padding: 8,
-    fontSize: 16,
-  },
-  btn: {
-    backgroundColor: '#c2bad8',
-    padding: 9,
-    margin: 5,
-  },
-  btnText: {
-    color: 'darkslateblue',
-    fontSize: 20,
-    textAlign: 'center',
-  },
-  listDetailsHeaderView: {
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#eee',
-  },
-  listDetailsHeader: {
-    fontSize: 30,
-  },
-});
 
 export default GroupDetails;
