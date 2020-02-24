@@ -3,8 +3,23 @@ const users = express.Router();
 const User = require('../models/users');
 
 users.get('/', (req, res) => {
-  res.send('This is a user route');
-  console.log(req.body);
+  User.find((err, allItem) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log(allItem);
+    res.send(allItem);
+  });
+});
+
+users.get('/:id', (req, res) => {
+  User.findById(req.params.id, (err, item) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log(item);
+    res.send(item);
+  });
 });
 
 // update user profile
