@@ -5,6 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import AddNewEvent from './components/AddNewEvent';
+import AddNewGroup from './components/AddNewGroup';
 import AddNewList from './components/AddNewList';
 import Event from './components/EventHome';
 import EventDetails from './components/EventDetails';
@@ -26,6 +27,11 @@ const App = () => {
         <Stack.Screen
           name="AddNewEvent"
           component={AddNewEvent}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AddNewGroup"
+          component={AddNewGroup}
           options={{headerShown: false}}
         />
         <Stack.Screen
