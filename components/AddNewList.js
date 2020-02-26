@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 
 import {
@@ -22,11 +22,14 @@ import {
 } from 'native-base';
 
 // ADD 'LIST' COMPONENT
-const AddNewList = ({navigation}) => {
+const AddNewList = ({route, navigation}) => {
+  const {userData} = route.params;
+
   const [list, setList] = useState({
     name: '',
     shared: false,
     group: '',
+    available: [userData._id],
   });
 
   const handleListName = text => {

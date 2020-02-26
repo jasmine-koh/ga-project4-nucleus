@@ -47,7 +47,6 @@ const Home = ({route, navigation}) => {
     auth0.webAuth
       .clearSession()
       .then(res => {
-        res.send('logout');
         console.log('clear session ok');
       })
       .catch(err => {
@@ -79,19 +78,19 @@ const Home = ({route, navigation}) => {
   return (
     <Container style={styles.container}>
       <Header>
-        <Left>
+        {/* <Left>
           <Button transparent onPress={() => navigation.navigate('Profile')}>
             <Icon name="person" />
           </Button>
-        </Left>
+        </Left> */}
         <Body>
           <Title>Home</Title>
         </Body>
-        <Right>
+        {/* <Right>
           <Button transparent>
             <Icon name="settings" />
           </Button>
-        </Right>
+        </Right> */}
       </Header>
       <Content padder>
         <Text>Hello {userData.firstName}</Text>
@@ -106,21 +105,21 @@ const Home = ({route, navigation}) => {
         <Card transparent style={styles.dashboardCards}>
           <CardItem
             button
-            onPress={() => navigation.navigate('Lists')}
+            onPress={() => navigation.navigate('Lists', {userData})}
             style={styles.card}>
             <Icon name="list" />
             <Text>Lists</Text>
           </CardItem>
           <CardItem
             button
-            onPress={() => navigation.navigate('Location')}
+            onPress={() => navigation.navigate('Location', {userData})}
             style={styles.card}>
             <Icon name="pin" />
             <Text>Location</Text>
           </CardItem>
           <CardItem
             button
-            onPress={() => navigation.navigate('Event')}
+            onPress={() => navigation.navigate('Event', {userData})}
             style={styles.card}>
             <Icon name="calendar" />
             <Text>Events</Text>
@@ -131,17 +130,17 @@ const Home = ({route, navigation}) => {
           </CardItem>
           <CardItem
             button
-            onPress={() => navigation.navigate('Group')}
+            onPress={() => navigation.navigate('Group', {userData})}
             style={styles.card}>
             <Icon name="contacts" />
             <Text>Groups</Text>
           </CardItem>
           <CardItem
             button
-            onPress={() => navigation.navigate('ABC')}
+            onPress={() => navigation.navigate('Profile', {userData})}
             style={styles.card}>
-            <Icon name="settings" />
-            <Text>Settings</Text>
+            <Icon name="person" />
+            <Text>Profile</Text>
           </CardItem>
         </Card>
       </Content>

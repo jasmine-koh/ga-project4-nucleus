@@ -17,7 +17,9 @@ import {
   Text,
 } from 'native-base';
 
-const Lists = ({navigation}) => {
+const Lists = ({route, navigation}) => {
+  const {userData} = route.params;
+
   const [lists, setLists] = useState([]);
 
   useEffect(() => {
@@ -64,7 +66,9 @@ const Lists = ({navigation}) => {
           <Title>Lists</Title>
         </Body>
         <Right>
-          <Button transparent onPress={() => navigation.navigate('AddNewList')}>
+          <Button
+            transparent
+            onPress={() => navigation.navigate('AddNewList', {userData})}>
             <Icon name="add" />
           </Button>
         </Right>
@@ -79,6 +83,7 @@ const Lists = ({navigation}) => {
               onPress={() =>
                 navigation.navigate('ListDetails', {
                   list: item,
+                  userData,
                 })
               }>
               <Text>{item.name}</Text>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 
 import {
@@ -20,13 +20,19 @@ import {
   Text,
 } from 'native-base';
 
-const UserProfile = ({navigation}) => {
+const UserProfile = ({route, navigation}) => {
+  const {userData} = route.params;
+
   const [profile, setProfile] = useState({
-    firstName: '',
-    lastName: '',
-    contact: '',
-    email: '',
+    firstName: userData.firstName,
+    lastName: userData.lastName,
+    contact: userData.contact,
+    email: userData.email,
   });
+
+  useEffect(() => {
+    console.log(userData);
+  }, []);
 
   const handleFirstName = text => {
     firstName = text;
@@ -98,6 +104,7 @@ const UserProfile = ({navigation}) => {
             <Input
               placeholder="First Name"
               autoCapitalize="words"
+              value={profile.firstName}
               onChangeText={handleFirstName}
             />
           </Item>
@@ -106,6 +113,7 @@ const UserProfile = ({navigation}) => {
             <Input
               placeholder="Last Name"
               autoCapitalize="words"
+              value={profile.lastName}
               onChangeText={handleLastName}
             />
           </Item>
@@ -114,6 +122,9 @@ const UserProfile = ({navigation}) => {
             <Input
               placeholder="Mobile Number"
               autoCapitalize="none"
+              keyboardType="phone-pad"
+              textContentType="telephoneNumber"
+              value={String(profile.contact)}
               onChangeText={handleContact}
             />
           </Item>
@@ -122,6 +133,7 @@ const UserProfile = ({navigation}) => {
             <Input
               placeholder="Email Address"
               autoCapitalize="none"
+              value={profile.email}
               onChangeText={handleEmail}
             />
           </Item>
