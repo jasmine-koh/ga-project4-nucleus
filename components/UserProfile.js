@@ -20,6 +20,8 @@ import {
   Text,
 } from 'native-base';
 
+// NOTE: think of a way to update userData with new details
+
 const UserProfile = ({route, navigation}) => {
   const {userData} = route.params;
 
@@ -29,10 +31,6 @@ const UserProfile = ({route, navigation}) => {
     contact: userData.contact,
     email: userData.email,
   });
-
-  useEffect(() => {
-    console.log(userData);
-  }, []);
 
   const handleFirstName = text => {
     firstName = text;
@@ -143,6 +141,7 @@ const UserProfile = ({route, navigation}) => {
           info
           onPress={() => {
             handleSubmit();
+            navigation.navigate('Home');
           }}>
           <Text>Submit</Text>
         </Button>

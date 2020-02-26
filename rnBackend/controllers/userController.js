@@ -27,13 +27,26 @@ users.get('/:id', (req, res) => {
 
 // ====== CREATE (POST) ======
 users.post('/', (req, res) => {
-  models.User.create(req.body, (err, createdUser) => {
-    if (err) {
-      console.log(err);
-    }
-    console.log(createdUser);
-    res.send('user created');
-  });
+  models.User.findOneAndUpdate(
+    {email: req.body.email},
+    req.body,
+    {upsert: true},
+    (err, result) => {
+      if (err) {
+        res.send(err);
+      } else {
+        console.log(result);
+        res.send('user created');
+      }
+    },
+  );
+  // models.User.create(req.body, (err, createdUser) => {
+  //   if (err) {
+  //     console.log(err);
+  //   }
+  //   console.log(createdUser);
+  //   res.send('user created');
+  // });
 });
 
 // ====== DELETE ======
