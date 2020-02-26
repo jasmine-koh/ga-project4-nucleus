@@ -68,7 +68,6 @@ const Login = ({navigation}) => {
         auth0.auth
           .userInfo({token: res.accessToken})
           .then(data => {
-            console.log(data);
             gotoHome(data); // go to the Home screen
           })
           .catch(err => {
@@ -83,12 +82,12 @@ const Login = ({navigation}) => {
       });
   };
 
-  const gotoHome = data => {
+  const gotoHome = Auth0userdata => {
     setStatus({
       hasInitialized: true,
     });
 
-    navigation.navigate('Home', {data});
+    navigation.navigate('Home', {Auth0userdata});
   };
 
   return (

@@ -26,9 +26,10 @@ const Events = ({navigation}) => {
 
   // get all lists in database
   const getEventFetch = () => {
-    fetch('http://localhost:3000/events')
+    fetch('https://nucleus-rn-backend.herokuapp.com/events')
       .then(res => res.json())
       .then(data => {
+        console.log(data);
         data.map(item => {
           setEvents(prevState => {
             return [...prevState, item];
@@ -39,7 +40,7 @@ const Events = ({navigation}) => {
 
   //   Function to delete a list
   const deleteEventFetch = id => {
-    fetch('http://localhost:3000/events/' + id, {
+    fetch('https://nucleus-rn-backend.herokuapp.com/events/' + id, {
       method: 'DELETE',
     })
       .then(res => res.text()) // or res.json()

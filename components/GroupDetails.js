@@ -24,9 +24,13 @@ import {
 
 // ADD 'ITEM into LIST' COMPONENT
 const GroupDetails = ({route, navigation}) => {
+  const {group} = route.params;
   const {groupID} = route.params;
+  const {emails} = route.params;
 
-  const [group, setGroup] = useState({});
+  const [groupData, setGroupData] = useState({});
+
+  let userArray = [];
 
   useEffect(() => {
     getGroupFetch();
@@ -34,59 +38,10 @@ const GroupDetails = ({route, navigation}) => {
 
   // get all items in database
   const getGroupFetch = () => {
-    fetch('http://localhost:3000/groups/' + groupID)
+    fetch('https://nucleus-rn-backend.herokuapp.com/groups/' + groupID)
       .then(res => res.json())
-      .then(data => setGroup(data));
+      .then(data => setGroupData(data));
   };
-
-  // ====== DELETE ========
-  // delete member in state
-  // const deleteItem = id => {
-  //   deleteItemFetch(id);
-  //   setItem([]);
-  //   getItemFetch();
-  // };
-
-  // delete member in database
-  // const deleteItemFetch = id => {
-  //   fetch('http://localhost:3000/items/' + id, {
-  //     method: 'DELETE',
-  //   })
-  //     .then(res => res.text()) // or res.json()
-  //     .then(res => console.log(res));
-  // };
-
-  // ====== ADD ======
-  // add member into database
-  // const addItemFetch = text => {
-  //   fetch('http://localhost:3000/items', {
-  //     method: 'POST',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       name: text,
-  //       status: false,
-  //       listName: list.name,
-  //       listId: list._id,
-  //     }),
-  //   }).catch(err => {
-  //     console.log('error msg: ', err);
-  //   });
-  //   getItemFetch();
-  // };
-
-  // ====== HANDLERS ======
-  // const onChange = textValue => {
-  //   setText(textValue);
-  // };
-
-  // const handleAllAdd = text => {
-  //   // handleAddItem(text);
-  //   addItemFetch(text);
-  //   setItem([]);
-  // };
 
   return (
     <Container>
@@ -97,18 +52,37 @@ const GroupDetails = ({route, navigation}) => {
           </Button>
         </Left>
         <Body>
-          <Title>{group.name}</Title>
+          <Title>{groupData.name}</Title>
         </Body>
         <Right>
-          <Button transparent>
-            <Icon name="checkmark" />
+          <Button
+            transparent
+            onPress={() =>
+              navigation.navigate('EditGroupMember', {
+                emails,
+                groupData,
+                groupID,
+              })
+            }>
+            <Icon name="add" />
           </Button>
         </Right>
       </Header>
       <Content padded>
         <ListItem>
-          <Text>Description: {group.description}</Text>
+          <Text>Description: {groupData.description}</Text>
         </ListItem>
+        <Text>Members: </Text>
+        <FlatList
+          data={groupData.members}
+          renderItem={({item}) => (
+            <ListItem>
+              <Text>
+                {item.firstName} {item.lastName}
+              </Text>
+            </ListItem>
+          )}
+        />
       </Content>
       <Footer>
         <FooterTab>

@@ -34,14 +34,14 @@ const EventDetails = ({route, navigation}) => {
 
   // get the event in database
   const getEventDetailsFetch = () => {
-    fetch('http://localhost:3000/events/' + event)
+    fetch('https://nucleus-rn-backend.herokuapp.com/events/' + event)
       .then(res => res.json())
       .then(data => setDetail(data));
   };
 
   // update the event in database
   const editEventFetch = () => {
-    fetch('http://localhost:3000/events' + event, {
+    fetch('https://nucleus-rn-backend.herokuapp.com/events/' + event, {
       method: 'PUT',
       headers: {
         Accept: 'application/json',
@@ -54,9 +54,12 @@ const EventDetails = ({route, navigation}) => {
         date: detail.date,
         time: detail.time,
       }),
-    }).catch(err => {
-      console.log('error msg: ', err);
-    });
+    })
+      .then(response => response.text())
+      .then(data => console.log(data))
+      .catch(err => {
+        console.log('error msg: ', err);
+      });
   };
 
   const handleSubmit = () => {

@@ -4,10 +4,12 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
+import AddGroupMember from './components/AddGroupMember';
 import AddNewEvent from './components/AddNewEvent';
 import AddNewGroup from './components/AddNewGroup';
 import AddNewList from './components/AddNewList';
 import AllContacts from './components/Contacts';
+import EditGroupMember from './components/EditGroupMember';
 import Event from './components/EventHome';
 import EventDetails from './components/EventDetails';
 import Group from './components/Group';
@@ -26,6 +28,11 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
+          name="AddGroupMember"
+          component={AddGroupMember}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
           name="AddNewEvent"
           component={AddNewEvent}
           options={{headerShown: false}}
@@ -43,6 +50,11 @@ const App = () => {
         <Stack.Screen
           name="AllContacts"
           component={AllContacts}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditGroupMember"
+          component={EditGroupMember}
           options={{headerShown: false}}
         />
         <Stack.Screen

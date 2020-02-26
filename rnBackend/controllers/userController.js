@@ -1,9 +1,9 @@
 const express = require('express');
 const users = express.Router();
-const User = require('../models/users');
+const models = require('../models/users');
 
 users.get('/', (req, res) => {
-  User.find((err, allItem) => {
+  models.User.find((err, allItem) => {
     if (err) {
       console.log(err);
     }
@@ -13,23 +13,37 @@ users.get('/', (req, res) => {
 });
 
 users.get('/:id', (req, res) => {
-  User.findById(req.params.id, (err, item) => {
-    if (err) {
-      console.log(err);
-    }
-    console.log(item);
-    res.send(item);
-  });
+  models.User.findById(req.params.id)
+    .populate('groups')
+    .exec((err, users) => {
+      if (err) {
+        console.log(err.message);
+      } else {
+        console.log(users);
+        res.send(users);
+      }
+    });
 });
 
-// update user profile
+// ====== CREATE (POST) ======
 users.post('/', (req, res) => {
-  User.create(req.body, (err, createdUser) => {
+  models.User.create(req.body, (err, createdUser) => {
     if (err) {
       console.log(err);
     }
     console.log(createdUser);
     res.send('user created');
+  });
+});
+
+// ====== DELETE ======
+users.delete('/:id', (req, res) => {
+  models.User.findByIdAndDelete(req.params.id, (err, data) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log('delete: ', data);
+    res.send('deleted');
   });
 });
 

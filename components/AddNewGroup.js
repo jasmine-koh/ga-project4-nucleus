@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, FlatList, Platform, PermissionsAndroid} from 'react-native';
+import {StyleSheet} from 'react-native';
 
 import {
   Container,
@@ -18,57 +18,18 @@ import {
   Icon,
   Title,
   Text,
-  ListItem,
-  CheckBox,
 } from 'native-base';
 
-import Contacts from 'react-native-contacts';
-
 // ADD 'GROUP' COMPONENT
-const AddNewGroup = ({navigation}) => {
+const AddNewGroup = ({route, navigation}) => {
+  const {emails} = route.params;
+
+  let userArray = [];
+
   const [group, setGroup] = useState({
     name: '',
     description: '',
-    members: [],
   });
-
-  const [contacts, setContacts] = useState([]);
-
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    getUsersFetch();
-    permission();
-  }, []);
-
-  // get contact list from phone
-  const permission = () => {
-    if (Platform.OS === 'android') {
-      PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
-        title: 'Contacts',
-        message: ' This app would like to see your contacts',
-      }).then(() => {
-        getList();
-      });
-    } else if (Platform.OS === 'ios') {
-      getList();
-    }
-  };
-
-  const getList = () => {
-    Contacts.getAll((err, allContacts) => {
-      if (err === 'denied') {
-        console.log('cannot access');
-      } else {
-        console.log(users);
-        allContacts.map(item => {
-          setContacts(prevState => {
-            return [...prevState, item];
-          });
-        });
-      }
-    });
-  };
 
   // Functions
   const handleName = text => {
@@ -85,36 +46,31 @@ const AddNewGroup = ({navigation}) => {
     });
   };
 
+  const addUser = user => {
+    userArray.push(user);
+    console.log(user);
+  };
+
   const handleSubmit = () => {
     addGroupFetch();
   };
 
-  // Database
-
-  // get all users in database
-  const getUsersFetch = () => {
-    fetch('http://localhost:3000/users')
-      .then(res => res.json())
-      .then(data => {
-        setUsers(data);
-      });
-  };
-
-  const addGroupFetch = () => {
-    fetch('http://localhost:3000/groups', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: group.name,
-        description: group.description,
-      }),
-    }).catch(err => {
-      console.log('error msg: ', err);
-    });
-  };
+  // const addGroupFetch = () => {
+  //   fetch('http://localhost:3000/groups', {
+  //     method: 'POST',
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       name: group.name,
+  //       description: group.description,
+  //       members: userArray,
+  //     }),
+  //   }).catch(err => {
+  //     console.log('error msg: ', err);
+  //   });
+  // };
 
   return (
     <Container>
@@ -131,9 +87,8 @@ const AddNewGroup = ({navigation}) => {
           <Button
             transparent
             onPress={() => {
-              handleSubmit();
-              navigation.navigate('Group');
-              // TO FIX: list page not refreshing when going back
+              // handleSubmit();
+              navigation.navigate('AddGroupMember', {emails, group});
             }}>
             <Icon name="checkmark" />
           </Button>
@@ -154,20 +109,7 @@ const AddNewGroup = ({navigation}) => {
             <Input placeholder="Description" onChangeText={handleDescription} />
           </Item>
         </Form>
-        <FlatList
-          data={contacts}
-          renderItem={({item}) => (
-            <ListItem>
-              <CheckBox />
-              <Body>
-                <Text>
-                  {`${item.givenName} `}
-                  {item.familyName}
-                </Text>
-              </Body>
-            </ListItem>
-          )}
-        />
+        {/* <AddGroupMember emails={emails} addUser={addUser} /> */}
       </Content>
       <Footer>
         <FooterTab>

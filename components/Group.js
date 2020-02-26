@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {FlatList, StyleSheet} from 'react-native';
+import {FlatList, StyleSheet, PermissionsAndroid, Platform} from 'react-native';
 
 import {
   Container,
@@ -17,16 +17,51 @@ import {
   Text,
 } from 'native-base';
 
+import Contacts from 'react-native-contacts';
+
 const Groups = ({navigation}) => {
   const [groups, setGroups] = useState([]);
 
+  const [emails, setEmails] = useState([]);
+
   useEffect(() => {
     getGroupFetch();
+    permission();
   }, []);
+
+  // get contact list from phone
+  const permission = () => {
+    if (Platform.OS === 'android') {
+      PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
+        title: 'Contacts',
+        message: ' This app would like to see your contacts',
+      }).then(() => {
+        getList();
+      });
+    } else if (Platform.OS === 'ios') {
+      getList();
+    }
+  };
+
+  const getList = () => {
+    Contacts.getAll((err, allContacts) => {
+      if (err === 'denied') {
+        console.log('cannot access');
+      } else {
+        allContacts.map(item => {
+          item.emailAddresses.map(email => {
+            setEmails(prevState => {
+              return [...prevState, email];
+            });
+          });
+        });
+      }
+    });
+  };
 
   // get all lists in database
   const getGroupFetch = () => {
-    fetch('http://localhost:3000/groups')
+    fetch('https://nucleus-rn-backend.herokuapp.com/groups')
       .then(res => res.json())
       .then(data => {
         data.map(item => {
@@ -39,7 +74,7 @@ const Groups = ({navigation}) => {
 
   //   Function to delete a list
   const deleteGroupFetch = id => {
-    fetch('http://localhost:3000/groups/' + id, {
+    fetch('https://nucleus-rn-backend.herokuapp.com/groups/' + id, {
       method: 'DELETE',
     })
       .then(res => res.text()) // or res.json()
@@ -66,7 +101,7 @@ const Groups = ({navigation}) => {
         <Right>
           <Button
             transparent
-            onPress={() => navigation.navigate('AddNewGroup')}>
+            onPress={() => navigation.navigate('AddNewGroup', {emails})}>
             <Icon name="add" />
           </Button>
         </Right>
@@ -80,7 +115,9 @@ const Groups = ({navigation}) => {
               buttons
               onPress={() =>
                 navigation.navigate('GroupDetails', {
+                  group: item,
                   groupID: item._id,
+                  emails,
                 })
               }>
               <Text>{item.name}</Text>

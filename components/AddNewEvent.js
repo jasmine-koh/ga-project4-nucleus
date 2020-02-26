@@ -85,7 +85,7 @@ const AddNewEvent = ({navigation}) => {
   };
 
   const addEventFetch = () => {
-    fetch('http://localhost:3000/events', {
+    fetch('https://nucleus-rn-backend.herokuapp.com/events', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

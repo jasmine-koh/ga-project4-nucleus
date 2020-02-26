@@ -49,9 +49,10 @@ events.put('/:id', (req, res) => {
     (err, updatedEvent) => {
       if (err) {
         console.log(err);
+      } else {
+        console.log('edited: ', updatedEvent);
+        res.send(updatedEvent);
       }
-      console.log('edited: ', updatedEvent);
-      res.redirect('edited');
     },
   );
 });

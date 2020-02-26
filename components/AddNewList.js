@@ -44,7 +44,7 @@ const AddNewList = ({navigation}) => {
   };
 
   const addListFetch = () => {
-    fetch('http://localhost:3000/lists', {
+    fetch('https://nucleus-rn-backend.herokuapp.com/lists', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

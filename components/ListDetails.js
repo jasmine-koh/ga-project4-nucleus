@@ -36,7 +36,7 @@ const ListDetails = ({route, navigation}) => {
 
   // get all items in database
   const getItemFetch = () => {
-    fetch('http://localhost:3000/items')
+    fetch('https://nucleus-rn-backend.herokuapp.com/items')
       .then(res => res.json())
       .then(data => {
         data.map(item => {
@@ -59,7 +59,7 @@ const ListDetails = ({route, navigation}) => {
 
   // delete item in database
   const deleteItemFetch = id => {
-    fetch('http://localhost:3000/items/' + id, {
+    fetch('https://nucleus-rn-backend.herokuapp.com/items/' + id, {
       method: 'DELETE',
     })
       .then(res => res.text()) // or res.json()
@@ -69,7 +69,7 @@ const ListDetails = ({route, navigation}) => {
   // ====== ADD ======
   // add item into database
   const addItemFetch = text => {
-    fetch('http://localhost:3000/items', {
+    fetch('https://nucleus-rn-backend.herokuapp.com/items', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -110,7 +110,7 @@ const ListDetails = ({route, navigation}) => {
           <Title>{list.name}</Title>
         </Body>
         <Right>
-          <Button transparent>
+          <Button transparent onPress={() => navigation.navigate('Lists')}>
             <Icon name="checkmark" />
           </Button>
         </Right>

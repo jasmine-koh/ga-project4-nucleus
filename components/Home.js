@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {Image, StyleSheet} from 'react-native';
 
@@ -31,7 +31,13 @@ const auth0 = new Auth0({
 });
 
 const Home = ({route, navigation}) => {
-  const {data} = route.params;
+  const {Auth0userdata} = route.params;
+
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    getUsersFetch();
+  }, []);
 
   // For Auth0 Logout
   const logout = () => {
@@ -41,6 +47,7 @@ const Home = ({route, navigation}) => {
     auth0.webAuth
       .clearSession()
       .then(res => {
+        res.send('logout');
         console.log('clear session ok');
       })
       .catch(err => {
@@ -53,6 +60,20 @@ const Home = ({route, navigation}) => {
   // For Auth0 Login
   const gotoLogin = () => {
     navigation.navigate('Login');
+  };
+
+  // Database
+  // get all users in database and compare with Auth0 data
+  const getUsersFetch = () => {
+    fetch('https://nucleus-rn-backend.herokuapp.com/users')
+      .then(res => res.json())
+      .then(data => {
+        data.map(item => {
+          if (Auth0userdata.email == item.email) {
+            setUserData(item);
+          }
+        });
+      });
   };
 
   return (
@@ -73,7 +94,7 @@ const Home = ({route, navigation}) => {
         </Right>
       </Header>
       <Content padder>
-        <Text>Hello {data.name}</Text>
+        <Text>Hello {userData.firstName}</Text>
         <Button onPress={logout}>
           <Text>Logout</Text>
         </Button>

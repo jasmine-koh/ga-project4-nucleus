@@ -26,7 +26,7 @@ const Lists = ({navigation}) => {
 
   // get all lists in database
   const getListFetch = () => {
-    fetch('http://localhost:3000/lists')
+    fetch('https://nucleus-rn-backend.herokuapp.com/lists')
       .then(res => res.json())
       .then(data => {
         data.map(item => {
@@ -39,7 +39,7 @@ const Lists = ({navigation}) => {
 
   //   Function to delete a list
   const deleteListFetch = id => {
-    fetch('http://localhost:3000/lists/' + id, {
+    fetch('https://nucleus-rn-backend.herokuapp.com/lists/' + id, {
       method: 'DELETE',
     })
       .then(res => res.text()) // or res.json()

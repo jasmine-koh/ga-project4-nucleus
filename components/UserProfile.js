@@ -57,7 +57,7 @@ const UserProfile = ({navigation}) => {
   };
 
   const handleSubmit = () => {
-    fetch('http://localhost:3000/users', {
+    fetch('https://nucleus-rn-backend.herokuapp.com/users', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
