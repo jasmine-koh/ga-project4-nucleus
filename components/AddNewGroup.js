@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
 
 import {
@@ -12,19 +12,16 @@ import {
   Item,
   Input,
   Label,
-  Footer,
-  FooterTab,
   Button,
   Icon,
   Title,
-  Text,
 } from 'native-base';
 
 // ADD 'GROUP' COMPONENT
 const AddNewGroup = ({route, navigation}) => {
   const {emails} = route.params;
 
-  let userArray = [];
+  const {userData} = route.params;
 
   const [group, setGroup] = useState({
     name: '',
@@ -46,34 +43,8 @@ const AddNewGroup = ({route, navigation}) => {
     });
   };
 
-  const addUser = user => {
-    userArray.push(user);
-    console.log(user);
-  };
-
-  const handleSubmit = () => {
-    addGroupFetch();
-  };
-
-  // const addGroupFetch = () => {
-  //   fetch('http://localhost:3000/groups', {
-  //     method: 'POST',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       name: group.name,
-  //       description: group.description,
-  //       members: userArray,
-  //     }),
-  //   }).catch(err => {
-  //     console.log('error msg: ', err);
-  //   });
-  // };
-
   return (
-    <Container>
+    <Container style={styles.container}>
       <Header>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
@@ -88,9 +59,9 @@ const AddNewGroup = ({route, navigation}) => {
             transparent
             onPress={() => {
               // handleSubmit();
-              navigation.navigate('AddGroupMember', {emails, group});
+              navigation.navigate('AddGroupMember', {emails, group, userData});
             }}>
-            <Icon name="checkmark" />
+            <Icon name="arrow-forward" />
           </Button>
         </Right>
       </Header>
@@ -109,26 +80,14 @@ const AddNewGroup = ({route, navigation}) => {
             <Input placeholder="Description" onChangeText={handleDescription} />
           </Item>
         </Form>
-        {/* <AddGroupMember emails={emails} addUser={addUser} /> */}
       </Content>
-      <Footer>
-        <FooterTab>
-          <Button full>
-            <Text>Footer</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
     </Container>
   );
 };
 
 const styles = StyleSheet.create({
-  itemContainer: {
-    margin: 10,
-  },
-  contactName: {
-    fontSize: 16,
-    color: 'blue',
+  container: {
+    backgroundColor: '#f8f8f8',
   },
 });
 

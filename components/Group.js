@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {FlatList, StyleSheet, PermissionsAndroid, Platform} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  PermissionsAndroid,
+  Platform,
+} from 'react-native';
 
 import {
   Container,
@@ -7,10 +14,6 @@ import {
   Left,
   Body,
   Right,
-  Content,
-  ListItem,
-  Footer,
-  FooterTab,
   Button,
   Icon,
   Title,
@@ -19,7 +22,9 @@ import {
 
 import Contacts from 'react-native-contacts';
 
-const Groups = ({navigation}) => {
+const Groups = ({route, navigation}) => {
+  const {userData} = route.params;
+
   const [groups, setGroups] = useState([]);
 
   const [emails, setEmails] = useState([]);
@@ -65,8 +70,12 @@ const Groups = ({navigation}) => {
       .then(res => res.json())
       .then(data => {
         data.map(item => {
-          setGroups(prevState => {
-            return [...prevState, item];
+          item.members.map(member => {
+            if (member == userData._id) {
+              setGroups(prevState => {
+                return [...prevState, item];
+              });
+            }
           });
         });
       });
@@ -83,8 +92,9 @@ const Groups = ({navigation}) => {
 
   const deleteGroup = id => {
     deleteGroupFetch(id);
-    setGroups([]);
-    getGroupFetch();
+    setGroups(prevState => {
+      return prevState.filter(mems => mems._id != id);
+    });
   };
 
   return (
@@ -101,38 +111,36 @@ const Groups = ({navigation}) => {
         <Right>
           <Button
             transparent
-            onPress={() => navigation.navigate('AddNewGroup', {emails})}>
+            onPress={() =>
+              navigation.navigate('AddNewGroup', {emails, userData})
+            }>
             <Icon name="add" />
           </Button>
         </Right>
       </Header>
-      <Content padder>
+      <View>
         <FlatList
           data={groups}
           renderItem={({item}) => (
-            <ListItem
+            <TouchableOpacity
               style={styles.items}
               buttons
               onPress={() =>
                 navigation.navigate('GroupDetails', {
-                  group: item,
                   groupID: item._id,
                   emails,
+                  userData,
                 })
               }>
-              <Text>{item.name}</Text>
-              <Icon name="close" onPress={() => deleteGroup(item._id)} />
-            </ListItem>
+              <View style={styles.flatlistView}>
+                <Text>{item.name}</Text>
+                <Icon name="close" onPress={() => deleteGroup(item._id)} />
+              </View>
+            </TouchableOpacity>
           )}
+          keyExtractor={item => item._id}
         />
-      </Content>
-      <Footer>
-        <FooterTab>
-          <Button full>
-            <Text>Footer</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
+      </View>
     </Container>
   );
 };
@@ -141,11 +149,14 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f8f8f8',
   },
-  items: {
+  flatlistView: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    borderColor: '#e1e1e1',
+    borderWidth: 1,
+    padding: 30,
   },
 });
 

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, FlatList} from 'react-native';
+import {StyleSheet, FlatList, TouchableOpacity, View} from 'react-native';
 
 import {
   Container,
@@ -8,11 +8,9 @@ import {
   Body,
   Right,
   Title,
-  Content,
   Button,
   Icon,
   Text,
-  ListItem,
 } from 'native-base';
 
 // ADD 'GROUP' COMPONENT
@@ -20,6 +18,7 @@ import {
 const AddGroupMember = ({route, navigation}) => {
   const {emails} = route.params;
   const {group} = route.params;
+  const {userData} = route.params;
 
   const [users, setUsers] = useState([]);
 
@@ -32,6 +31,12 @@ const AddGroupMember = ({route, navigation}) => {
   const addUser = user => {
     setUserArray(prevState => {
       return [...prevState, user];
+    });
+  };
+
+  const removeMember = id => {
+    setUserArray(prevState => {
+      return prevState.filter(mems => mems._id != id);
     });
   };
 
@@ -54,7 +59,7 @@ const AddGroupMember = ({route, navigation}) => {
   };
 
   const addGroupFetch = () => {
-    fetch('http://localhost:3000/groups', {
+    fetch('https://nucleus-rn-backend.herokuapp.com/groups', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -75,7 +80,7 @@ const AddGroupMember = ({route, navigation}) => {
   };
 
   return (
-    <Container>
+    <Container style={styles.container}>
       <Header>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
@@ -90,45 +95,68 @@ const AddGroupMember = ({route, navigation}) => {
             transparent
             onPress={() => {
               handleSubmit();
-              navigation.navigate('Group');
+              navigation.push('Group', {userData});
             }}>
             <Icon name="checkmark" />
           </Button>
         </Right>
       </Header>
-      <Content padded>
-        <Text>Members added: </Text>
-        <FlatList
-          data={userArray}
-          renderItem={({item}) => (
-            <ListItem>
-              <Text>
-                {item.firstName} {item.lastName}
-              </Text>
-            </ListItem>
-          )}
-        />
-        <Text>Available users: </Text>
-        <FlatList
-          data={users}
-          renderItem={({item}) => (
-            <ListItem>
-              <Text>
-                {item.firstName} {item.lastName}
-              </Text>
-              <Button
-                transparent
+      <View>
+        <View>
+          <Text>Members added: </Text>
+          <FlatList
+            data={userArray}
+            renderItem={({item}) => (
+              <TouchableOpacity onPress={() => removeMember(item._id)}>
+                <View style={styles.flatlistView}>
+                  <Text>
+                    {item.firstName} {item.lastName}
+                  </Text>
+                  <Icon name="close" />
+                </View>
+              </TouchableOpacity>
+            )}
+            keyExtractor={item => item._id}
+          />
+        </View>
+        <View>
+          <Text>Available users: </Text>
+          <FlatList
+            data={users}
+            renderItem={({item}) => (
+              <TouchableOpacity
                 onPress={() => {
                   addUser(item);
                 }}>
-                <Icon name="add" />
-              </Button>
-            </ListItem>
-          )}
-        />
-      </Content>
+                <View style={styles.flatlistView}>
+                  <Text>
+                    {item.firstName} {item.lastName}
+                  </Text>
+                  <Icon name="add" />
+                </View>
+              </TouchableOpacity>
+            )}
+            keyExtractor={item => item._id}
+          />
+        </View>
+      </View>
     </Container>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f8f8f8',
+  },
+  flatlistView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderColor: '#e1e1e1',
+    borderWidth: 1,
+    padding: 30,
+  },
+});
 
 export default AddGroupMember;

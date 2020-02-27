@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, FlatList} from 'react-native';
+import {StyleSheet, View, FlatList} from 'react-native';
 
 import {
   Container,
@@ -7,15 +7,6 @@ import {
   Left,
   Body,
   Right,
-  Content,
-  Form,
-  Item,
-  Input,
-  Label,
-  ListItem,
-  CheckBox,
-  Footer,
-  FooterTab,
   Button,
   Icon,
   Title,
@@ -24,13 +15,12 @@ import {
 
 // ADD 'ITEM into LIST' COMPONENT
 const GroupDetails = ({route, navigation}) => {
-  const {group} = route.params;
+  // const {group} = route.params;
   const {groupID} = route.params;
   const {emails} = route.params;
+  const {userData} = route.params;
 
   const [groupData, setGroupData] = useState({});
-
-  let userArray = [];
 
   useEffect(() => {
     getGroupFetch();
@@ -44,7 +34,7 @@ const GroupDetails = ({route, navigation}) => {
   };
 
   return (
-    <Container>
+    <Container style={styles.container}>
       <Header>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
@@ -62,37 +52,49 @@ const GroupDetails = ({route, navigation}) => {
                 emails,
                 groupData,
                 groupID,
+                userData,
               })
             }>
-            <Icon name="add" />
+            <Icon name="create" />
           </Button>
         </Right>
       </Header>
-      <Content padded>
-        <ListItem>
+      <View>
+        <View>
           <Text>Description: {groupData.description}</Text>
-        </ListItem>
-        <Text>Members: </Text>
-        <FlatList
-          data={groupData.members}
-          renderItem={({item}) => (
-            <ListItem>
-              <Text>
-                {item.firstName} {item.lastName}
-              </Text>
-            </ListItem>
-          )}
-        />
-      </Content>
-      <Footer>
-        <FooterTab>
-          <Button full>
-            <Text>Footer</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
+        </View>
+        <View>
+          <Text>Members: </Text>
+          <FlatList
+            data={groupData.members}
+            renderItem={({item}) => (
+              <View style={styles.flatlistView}>
+                <Text>
+                  {item.firstName} {item.lastName}
+                </Text>
+              </View>
+            )}
+            keyExtractor={item => item._id}
+          />
+        </View>
+      </View>
     </Container>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f8f8f8',
+  },
+  flatlistView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderColor: '#e1e1e1',
+    borderWidth: 1,
+    padding: 30,
+  },
+});
 
 export default GroupDetails;
