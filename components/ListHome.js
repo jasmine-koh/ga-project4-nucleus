@@ -7,8 +7,6 @@ import {
   Left,
   Body,
   Right,
-  Footer,
-  FooterTab,
   Button,
   Icon,
   Title,
@@ -22,8 +20,6 @@ const Lists = ({route, navigation}) => {
 
   useEffect(() => {
     getListFetch();
-    console.log('userData: ', userData);
-    console.log('lists: ', lists);
   }, []);
 
   // get all lists in database
@@ -32,8 +28,12 @@ const Lists = ({route, navigation}) => {
       .then(res => res.json())
       .then(data => {
         data.map(item => {
-          setLists(prevState => {
-            return [...prevState, item];
+          item.available.map(user => {
+            if (user == userData._id) {
+              setLists(prevState => {
+                return [...prevState, item];
+              });
+            }
           });
         });
       });
@@ -50,8 +50,9 @@ const Lists = ({route, navigation}) => {
 
   const deleteList = id => {
     deleteListFetch(id);
-    setLists([]);
-    getListFetch();
+    setLists(prevState => {
+      return prevState.filter(mems => mems._id != id);
+    });
   };
 
   return (
@@ -93,13 +94,6 @@ const Lists = ({route, navigation}) => {
           keyExtractor={item => item._id}
         />
       </View>
-      <Footer>
-        <FooterTab>
-          <Button full>
-            <Text>Footer</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
     </Container>
   );
 };

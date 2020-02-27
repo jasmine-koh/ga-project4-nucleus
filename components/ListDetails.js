@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, FlatList} from 'react-native';
+import {StyleSheet, FlatList, View, TouchableOpacity} from 'react-native';
 
 import {
   Container,
@@ -7,15 +7,10 @@ import {
   Left,
   Body,
   Right,
-  Content,
   Form,
   Item,
   Input,
   Label,
-  ListItem,
-  CheckBox,
-  Footer,
-  FooterTab,
   Button,
   Icon,
   Title,
@@ -25,6 +20,7 @@ import {
 // ADD 'ITEM into LIST' COMPONENT
 const ListDetails = ({route, navigation}) => {
   const {list} = route.params;
+  const {userData} = route.params;
 
   const [text, setText] = useState('');
 
@@ -53,8 +49,9 @@ const ListDetails = ({route, navigation}) => {
   // delete item in state
   const deleteItem = id => {
     deleteItemFetch(id);
-    setItem([]);
-    getItemFetch();
+    setItem(prevState => {
+      return prevState.filter(item => item._id != id);
+    });
   };
 
   // delete item in database
@@ -93,7 +90,6 @@ const ListDetails = ({route, navigation}) => {
   };
 
   const handleAllAdd = text => {
-    // handleAddItem(text);
     addItemFetch(text);
     setItem([]);
   };
@@ -110,12 +106,14 @@ const ListDetails = ({route, navigation}) => {
           <Title>{list.name}</Title>
         </Body>
         <Right>
-          <Button transparent onPress={() => navigation.navigate('Lists')}>
+          <Button
+            transparent
+            onPress={() => navigation.push('Lists', {userData})}>
             <Icon name="checkmark" />
           </Button>
         </Right>
       </Header>
-      <Content padded>
+      <View>
         <Form>
           <Item>
             <Label>Item: </Label>
@@ -137,28 +135,33 @@ const ListDetails = ({route, navigation}) => {
         <FlatList
           data={item}
           renderItem={({item}) => (
-            <ListItem>
-              <CheckBox checked={item.status} />
-              <Body>
+            <TouchableOpacity>
+              <View style={styles.flatlistView}>
                 <Text>{item.name}</Text>
-                <Text>{item._id}</Text>
-              </Body>
-              <Right>
                 <Icon name="close" onPress={() => deleteItem(item._id)} />
-              </Right>
-            </ListItem>
+              </View>
+            </TouchableOpacity>
           )}
+          keyExtractor={item => item._id}
         />
-      </Content>
-      <Footer>
-        <FooterTab>
-          <Button full>
-            <Text>Footer</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
+      </View>
     </Container>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f8f8f8',
+  },
+  flatlistView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderColor: '#e1e1e1',
+    borderWidth: 1,
+    padding: 30,
+  },
+});
 
 export default ListDetails;

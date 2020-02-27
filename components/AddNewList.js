@@ -1,11 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {
-  FlatList,
-  View,
-  TouchableOpacity,
-  Picker,
-  StyleSheet,
-} from 'react-native';
+import {View, Picker, StyleSheet} from 'react-native';
 
 import {
   Container,
@@ -17,12 +11,9 @@ import {
   Item,
   Input,
   Label,
-  Footer,
-  FooterTab,
   Button,
   Icon,
   Title,
-  Text,
   Switch,
 } from 'native-base';
 
@@ -30,11 +21,14 @@ import {
 const AddNewList = ({route, navigation}) => {
   const {userData} = route.params;
 
+  // groups available to user
   const [group, setGroup] = useState([]);
 
+  // group selected to share
   const [selected, setSelected] = useState();
 
-  const [availMem, setAvailMem] = useState([]);
+  // people who can see this list
+  const [avail, setAvail] = useState([userData._id]);
 
   const [list, setList] = useState({
     name: '',
@@ -61,19 +55,17 @@ const AddNewList = ({route, navigation}) => {
     });
   };
 
-  const updateAvailArray = () => {
-    // find members in selected group
-  };
-
   const handleChange = itemValue => {
     setSelected(itemValue);
 
     for (i = 0; i < group.length; i++) {
       if (group[i].name == selected) {
         group[i].members.map(member => {
-          setAvailMem(prevState => {
-            return [...prevState, member];
-          });
+          if (member != userData._id) {
+            setAvail(prevState => {
+              return [...prevState, member];
+            });
+          }
         });
       }
     }
@@ -112,7 +104,7 @@ const AddNewList = ({route, navigation}) => {
         name: list.name,
         shared: list.shared,
         groups: list.groups,
-        available: availMem,
+        available: avail,
       }),
     }).catch(err => {
       console.log('error msg: ', err);
@@ -135,7 +127,7 @@ const AddNewList = ({route, navigation}) => {
             transparent
             onPress={() => {
               handleSubmit();
-              navigation.navigate('Lists');
+              navigation.push('Lists', {userData});
               // TO FIX: list page not refreshing when going back
             }}>
             <Icon name="checkmark" />
@@ -178,13 +170,6 @@ const AddNewList = ({route, navigation}) => {
           </Picker>
         ) : null}
       </View>
-      <Footer>
-        <FooterTab>
-          <Button full>
-            <Text>Footer</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
     </Container>
   );
 };
