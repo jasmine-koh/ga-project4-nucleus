@@ -72,7 +72,8 @@ const AddNewList = ({route, navigation}) => {
   };
 
   const handleSubmit = () => {
-    addListFetch();
+    // addListFetch();
+    console.log(avail);
   };
 
   // get groups avaiable to user from database
@@ -128,7 +129,6 @@ const AddNewList = ({route, navigation}) => {
             onPress={() => {
               handleSubmit();
               navigation.push('Lists', {userData});
-              // TO FIX: list page not refreshing when going back
             }}>
             <Icon name="checkmark" />
           </Button>
@@ -150,8 +150,8 @@ const AddNewList = ({route, navigation}) => {
             <Switch onValueChange={handleSwitch} value={list.shared} />
           </Item>
         </Form>
-        {// Display the group in screen when shared is true.
-        list.shared ? (
+        {/* Display the group in screen when shared is true. */}
+        {list.shared ? (
           <Picker
             mode="dropdown"
             selectedValue={selected}
