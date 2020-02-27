@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {FlatList, StyleSheet} from 'react-native';
+import {View, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 
 import {
   Container,
@@ -7,8 +7,6 @@ import {
   Left,
   Body,
   Right,
-  Content,
-  ListItem,
   Footer,
   FooterTab,
   Button,
@@ -24,6 +22,8 @@ const Lists = ({route, navigation}) => {
 
   useEffect(() => {
     getListFetch();
+    console.log('userData: ', userData);
+    console.log('lists: ', lists);
   }, []);
 
   // get all lists in database
@@ -73,25 +73,26 @@ const Lists = ({route, navigation}) => {
           </Button>
         </Right>
       </Header>
-      <Content padder>
+      <View>
         <FlatList
           data={lists}
           renderItem={({item}) => (
-            <ListItem
-              style={styles.items}
-              button
+            <TouchableOpacity
               onPress={() =>
                 navigation.navigate('ListDetails', {
                   list: item,
                   userData,
                 })
               }>
-              <Text>{item.name}</Text>
-              <Icon name="close" onPress={() => deleteList(item._id)} />
-            </ListItem>
+              <View style={styles.flatlistView}>
+                <Text>{item.name}</Text>
+                <Icon name="close" onPress={() => deleteList(item._id)} />
+              </View>
+            </TouchableOpacity>
           )}
+          keyExtractor={item => item._id}
         />
-      </Content>
+      </View>
       <Footer>
         <FooterTab>
           <Button full>
@@ -107,11 +108,14 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f8f8f8',
   },
-  items: {
+  flatlistView: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    borderColor: '#e1e1e1',
+    borderWidth: 1,
+    padding: 30,
   },
 });
 

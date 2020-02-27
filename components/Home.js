@@ -37,7 +37,7 @@ const Home = ({route, navigation}) => {
 
   useEffect(() => {
     getUsersFetch();
-  }, []);
+  }, [userData]);
 
   // For Auth0 Logout
   const logout = () => {

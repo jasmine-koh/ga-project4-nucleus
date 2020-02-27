@@ -59,7 +59,7 @@ const Groups = ({navigation}) => {
     });
   };
 
-  // get all lists in database
+  // get all groups in database
   const getGroupFetch = () => {
     fetch('https://nucleus-rn-backend.herokuapp.com/groups')
       .then(res => res.json())
