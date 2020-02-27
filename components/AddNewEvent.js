@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Platform, StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Picker, View, StyleSheet} from 'react-native';
 
 import {
   Container,
@@ -7,23 +7,19 @@ import {
   Left,
   Body,
   Right,
-  Content,
-  Footer,
-  FooterTab,
   Button,
   Icon,
   Title,
-  Text,
   Form,
   Item,
   Input,
   Label,
 } from 'native-base';
 
-import DateTimePicker from '@react-native-community/datetimepicker';
-
 // ADD 'EVENT' COMPONENT
-const AddNewEvent = ({navigation}) => {
+const AddNewEvent = ({route, navigation}) => {
+  const {userData} = route.params;
+
   const [event, setEvent] = useState({
     name: '',
     description: '',
@@ -33,10 +29,20 @@ const AddNewEvent = ({navigation}) => {
     date: '',
   });
 
-  // toggle calendar on/off
-  const [show, setShow] = useState(false);
-  const [date, setDate] = useState(new Date(1598051730000));
+  // toggle group on/off
+  const [groupshow, setGroupShow] = useState(false);
+  // groups available to user
+  const [group, setGroup] = useState([]);
+  // group selected to share
+  const [selected, setSelected] = useState();
+  // people who can see this list
+  const [avail, setAvail] = useState([userData._id]);
 
+  useEffect(() => {
+    getAvailableGroup();
+  }, []);
+
+  // FUNCTIONS
   const handleEventName = text => {
     name = text;
     setEvent(prevState => {
@@ -65,25 +71,58 @@ const AddNewEvent = ({navigation}) => {
     });
   };
 
-  const handleDate = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-
-    setDate(currentDate);
-
-    const date = currentDate.toDateString();
-    console.log(date);
-
+  const handleDate = text => {
+    date = text;
     setEvent(prevState => {
       return {...prevState, date};
     });
-
-    setShow(Platform.OS === 'ios' ? true : false);
   };
 
-  const showDatePicker = () => {
-    setShow(!show);
+  // toggle group on/off
+  const showGroupPicker = () => {
+    setGroupShow(!groupshow);
   };
 
+  // group selected
+  const handleChange = itemValue => {
+    setSelected(itemValue);
+
+    // members in group
+    for (i = 0; i < group.length; i++) {
+      if (group[i].name == selected) {
+        group[i].members.map(member => {
+          if (member != userData._id) {
+            setAvail(prevState => {
+              return [...prevState, member];
+            });
+          }
+        });
+      }
+    }
+  };
+
+  const handleSubmit = () => {
+    addEventFetch();
+  };
+
+  // get groups avaiable to user from database
+  const getAvailableGroup = () => {
+    fetch('https://nucleus-rn-backend.herokuapp.com/groups')
+      .then(res => res.json())
+      .then(data => {
+        data.map(item => {
+          item.members.map(member => {
+            if (member == userData._id) {
+              setGroup(prevState => {
+                return [...prevState, item];
+              });
+            }
+          });
+        });
+      });
+  };
+
+  // add event in database
   const addEventFetch = () => {
     fetch('https://nucleus-rn-backend.herokuapp.com/events', {
       method: 'POST',
@@ -97,18 +136,16 @@ const AddNewEvent = ({navigation}) => {
         location: event.location,
         date: event.date,
         time: event.time,
+        group: selected,
+        available: avail,
       }),
     }).catch(err => {
       console.log('error msg: ', err);
     });
   };
 
-  const handleSubmit = () => {
-    addEventFetch();
-  };
-
   return (
-    <Container>
+    <Container style={styles.container}>
       <Header>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
@@ -123,13 +160,13 @@ const AddNewEvent = ({navigation}) => {
             transparent
             onPress={() => {
               handleSubmit();
-              navigation.navigate('Event');
+              navigation.push('Event', {userData});
             }}>
             <Icon name="checkmark" />
           </Button>
         </Right>
       </Header>
-      <Content padded>
+      <View>
         <Form>
           <Item fixedLabel>
             <Label>Name: </Label>
@@ -152,28 +189,47 @@ const AddNewEvent = ({navigation}) => {
           </Item>
           <Item fixedLabel>
             <Label>Date: </Label>
-            <Input disabled={true} value={date} />
+            <Input placeholder="DD/MM/YYYY" onChangeText={handleDate} />
+          </Item>
+          <Item fixedLabel>
+            <Label>Group: </Label>
+            <Input value={selected} />
             <Button
               transparent
-              onPress={showDatePicker}
-              title="Show date picker!">
-              <Icon name="calendar"></Icon>
+              onPress={showGroupPicker}
+              title="Show group picker!">
+              <Icon name="people"></Icon>
             </Button>
           </Item>
         </Form>
-        {show && (
-          <DateTimePicker value={date} mode="date" onChange={handleDate} />
-        )}
-      </Content>
-      <Footer>
-        <FooterTab>
-          <Button full>
-            <Text>Footer</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
+        {/* Display the group in screen when show is true. */}
+        {groupshow ? (
+          <Picker
+            mode="dropdown"
+            selectedValue={selected}
+            onValueChange={(itemValue, itemIndex) => {
+              handleChange(itemValue);
+            }}>
+            {group.map(item => {
+              return (
+                <Picker.Item
+                  label={item.name}
+                  value={item.name}
+                  key={item._id}
+                />
+              );
+            })}
+          </Picker>
+        ) : null}
+      </View>
     </Container>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f8f8f8',
+  },
+});
 
 export default AddNewEvent;

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, FlatList} from 'react-native';
+import {StyleSheet, Picker, View} from 'react-native';
 
 import {
   Container,
@@ -7,64 +7,34 @@ import {
   Left,
   Body,
   Right,
-  Content,
   Form,
   Item,
   Input,
   Label,
-  Footer,
-  FooterTab,
   Button,
   Icon,
   Title,
-  Text,
 } from 'native-base';
-
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 const EventDetails = ({route, navigation}) => {
   const {event} = route.params;
+  const {userData} = route.params;
 
   const [detail, setDetail] = useState({});
-  const [show, setShow] = useState(false);
+
+  // toggle group on/off
+  const [groupshow, setGroupShow] = useState(false);
+  // groups available to user
+  const [group, setGroup] = useState([]);
+  // group selected to share
+  const [selected, setSelected] = useState();
+  // people who can see this list
+  const [avail, setAvail] = useState([userData._id]);
 
   useEffect(() => {
     getEventDetailsFetch();
+    getAvailableGroup();
   }, []);
-
-  // get the event in database
-  const getEventDetailsFetch = () => {
-    fetch('https://nucleus-rn-backend.herokuapp.com/events/' + event)
-      .then(res => res.json())
-      .then(data => setDetail(data));
-  };
-
-  // update the event in database
-  const editEventFetch = () => {
-    fetch('https://nucleus-rn-backend.herokuapp.com/events/' + event, {
-      method: 'PUT',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: detail.name,
-        description: detail.description,
-        location: detail.location,
-        date: detail.date,
-        time: detail.time,
-      }),
-    })
-      .then(response => response.text())
-      .then(data => console.log(data))
-      .catch(err => {
-        console.log('error msg: ', err);
-      });
-  };
-
-  const handleSubmit = () => {
-    editEventFetch();
-  };
 
   const handleName = text => {
     name = text;
@@ -94,23 +64,85 @@ const EventDetails = ({route, navigation}) => {
     });
   };
 
-  const handleDate = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    const date = currentDate.toDateString();
-
+  const handleDate = text => {
+    date = text;
     setDetail(prevState => {
       return {...prevState, date};
     });
-
-    setShow(Platform.OS === 'ios' ? true : false);
   };
 
-  const showDatePicker = () => {
-    setShow(!show);
+  // toggle group on/off
+  const showGroupPicker = () => {
+    setGroupShow(!groupshow);
+  };
+
+  // group selected
+  const handleChange = itemValue => {
+    setSelected(itemValue);
+
+    // members in group
+    for (i = 0; i < group.length; i++) {
+      if (group[i].name == selected) {
+        setAvail([group[i].members]);
+      }
+    }
+  };
+
+  const handleSubmit = () => {
+    editEventFetch();
+    console.log(avail);
+  };
+
+  // get the event in database
+  const getEventDetailsFetch = () => {
+    fetch('https://nucleus-rn-backend.herokuapp.com/events/' + event)
+      .then(res => res.json())
+      .then(data => setDetail(data));
+  };
+
+  // get groups avaiable to user from database
+  const getAvailableGroup = () => {
+    fetch('https://nucleus-rn-backend.herokuapp.com/groups')
+      .then(res => res.json())
+      .then(data => {
+        data.map(item => {
+          item.members.map(member => {
+            if (member == userData._id) {
+              setGroup(prevState => {
+                return [...prevState, item];
+              });
+            }
+          });
+        });
+      });
+  };
+
+  // update the event in database
+  const editEventFetch = () => {
+    fetch('https://nucleus-rn-backend.herokuapp.com/events/' + event, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: detail.name,
+        description: detail.description,
+        location: detail.location,
+        date: detail.date,
+        time: detail.time,
+        available: avail,
+      }),
+    })
+      .then(response => response.text())
+      .then(data => console.log(data))
+      .catch(err => {
+        console.log('error msg: ', err);
+      });
   };
 
   return (
-    <Container>
+    <Container style={styles.container}>
       <Header>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
@@ -125,13 +157,13 @@ const EventDetails = ({route, navigation}) => {
             transparent
             onPress={() => {
               handleSubmit();
-              navigation.navigate('Event');
+              navigation.push('Event', {userData});
             }}>
             <Icon name="checkmark" />
           </Button>
         </Right>
       </Header>
-      <Content padded>
+      <View>
         <Form>
           <Item fixedLabel>
             <Label>Name: </Label>
@@ -167,28 +199,51 @@ const EventDetails = ({route, navigation}) => {
           </Item>
           <Item fixedLabel>
             <Label>Date: </Label>
-            <Input value={detail.date} />
+            <Input
+              placeholder="DD/MM/YYYY"
+              value={detail.date}
+              onChangeText={handleDate}
+            />
+          </Item>
+          <Item fixedLabel>
+            <Label>Group: </Label>
+            <Input value={selected} />
             <Button
               transparent
-              onPress={showDatePicker}
-              title="Show date picker!">
-              <Icon name="calendar"></Icon>
+              onPress={showGroupPicker}
+              title="Show group picker!">
+              <Icon name="people"></Icon>
             </Button>
           </Item>
         </Form>
-        {show && (
-          <DateTimePicker value={date} mode="date" onChange={handleDate} />
-        )}
-      </Content>
-      <Footer>
-        <FooterTab>
-          <Button full>
-            <Text>Footer</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
+        {/* Display the group in screen when show is true. */}
+        {groupshow ? (
+          <Picker
+            mode="dropdown"
+            selectedValue={selected}
+            onValueChange={(itemValue, itemIndex) => {
+              handleChange(itemValue);
+            }}>
+            {group.map(item => {
+              return (
+                <Picker.Item
+                  label={item.name}
+                  value={item.name}
+                  key={item._id}
+                />
+              );
+            })}
+          </Picker>
+        ) : null}
+      </View>
     </Container>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f8f8f8',
+  },
+});
 
 export default EventDetails;

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {FlatList, StyleSheet} from 'react-native';
+import {View, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 
 import {
   Container,
@@ -7,17 +7,15 @@ import {
   Left,
   Body,
   Right,
-  Content,
-  ListItem,
-  Footer,
-  FooterTab,
   Button,
   Icon,
   Title,
   Text,
 } from 'native-base';
 
-const Events = ({navigation}) => {
+const Events = ({route, navigation}) => {
+  const {userData} = route.params;
+
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
@@ -29,10 +27,13 @@ const Events = ({navigation}) => {
     fetch('https://nucleus-rn-backend.herokuapp.com/events')
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         data.map(item => {
-          setEvents(prevState => {
-            return [...prevState, item];
+          item.available.map(user => {
+            if (user == userData._id) {
+              setEvents(prevState => {
+                return [...prevState, item];
+              });
+            }
           });
         });
       });
@@ -49,8 +50,9 @@ const Events = ({navigation}) => {
 
   const deleteEvent = id => {
     deleteEventFetch(id);
-    setEvents([]);
-    getEventFetch();
+    setEvents(prevState => {
+      return prevState.filter(mems => mems._id != id);
+    });
   };
 
   return (
@@ -67,36 +69,33 @@ const Events = ({navigation}) => {
         <Right>
           <Button
             transparent
-            onPress={() => navigation.navigate('AddNewEvent')}>
+            onPress={() => navigation.push('AddNewEvent', {userData})}>
             <Icon name="add" />
           </Button>
         </Right>
       </Header>
-      <Content padder>
+      <View>
         <FlatList
           data={events}
           renderItem={({item}) => (
-            <ListItem
+            <TouchableOpacity
               style={styles.items}
               buttons
               onPress={() =>
-                navigation.navigate('EventDetails', {
+                navigation.push('EventDetails', {
                   event: item._id,
+                  userData,
                 })
               }>
-              <Text>{item.name}</Text>
-              <Icon name="close" onPress={() => deleteEvent(item._id)} />
-            </ListItem>
+              <View style={styles.flatlistView}>
+                <Text>{item.name}</Text>
+                <Icon name="close" onPress={() => deleteEvent(item._id)} />
+              </View>
+            </TouchableOpacity>
           )}
+          keyExtractor={item => item._id}
         />
-      </Content>
-      <Footer>
-        <FooterTab>
-          <Button full>
-            <Text>Footer</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
+      </View>
     </Container>
   );
 };
@@ -105,11 +104,14 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f8f8f8',
   },
-  items: {
+  flatlistView: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    borderColor: '#e1e1e1',
+    borderWidth: 1,
+    padding: 30,
   },
 });
 
