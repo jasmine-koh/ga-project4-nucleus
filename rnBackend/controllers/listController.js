@@ -16,14 +16,16 @@ lists.get('/', (req, res) => {
 
 // get 'LIST' collection from DB
 lists.get('/:id', (req, res) => {
-  models.List.findById(req.params.id, (err, list) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(list);
-      res.send(list);
-    }
-  });
+  models.List.findById(req.params.id)
+    .populate('members')
+    .exec((err, list) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(list);
+        res.send(list);
+      }
+    });
 });
 
 // add a new list into 'LIST' collection
@@ -31,9 +33,10 @@ lists.post('/', (req, res) => {
   models.List.create(req.body, (err, createdList) => {
     if (err) {
       console.log(err);
+    } else {
+      console.log(createdList);
+      res.send(createdList);
     }
-    console.log(createdList);
-    res.send(createdList);
   });
 });
 
