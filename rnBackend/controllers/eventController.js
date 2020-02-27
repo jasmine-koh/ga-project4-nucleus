@@ -34,9 +34,10 @@ events.post('/', (req, res) => {
   Event.create(req.body, (err, createdEvent) => {
     if (err) {
       console.log(err);
+    } else {
+      console.log(createdEvent);
+      res.send(createdEvent);
     }
-    console.log(createdEvent);
-    res.send(createdEvent);
   });
 });
 

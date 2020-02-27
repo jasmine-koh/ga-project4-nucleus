@@ -7,9 +7,10 @@ const eventSchema = new Schema({
   description: {type: String},
   group: {type: String},
   location: {type: String},
-  date: {type: Date},
+  date: {type: String},
   time: {type: String},
-  available: [{type: Schema.Types.ObjectId, ref: 'User'}],
+  available: [{type: String}],
+  selected: {type: String},
 });
 
 const Event = mongoose.model('Event', eventSchema);

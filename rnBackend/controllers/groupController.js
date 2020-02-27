@@ -67,7 +67,6 @@ groups.post('/', (req, res) => {
 
 // ====== EDIT (PUT) ======
 groups.put('/:id', (req, res) => {
-  console.log('hello:', req.body);
   models.Group.findByIdAndUpdate(
     req.params.id,
     req.body,
