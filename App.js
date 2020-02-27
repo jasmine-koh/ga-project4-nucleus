@@ -8,7 +8,6 @@ import AddGroupMember from './components/AddGroupMember';
 import AddNewEvent from './components/AddNewEvent';
 import AddNewGroup from './components/AddNewGroup';
 import AddNewList from './components/AddNewList';
-import AllContacts from './components/Contacts';
 import EditGroupMember from './components/EditGroupMember';
 import Event from './components/EventHome';
 import EventDetails from './components/EventDetails';
@@ -45,11 +44,6 @@ const App = () => {
         <Stack.Screen
           name="AddNewList"
           component={AddNewList}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="AllContacts"
-          component={AllContacts}
           options={{headerShown: false}}
         />
         <Stack.Screen
