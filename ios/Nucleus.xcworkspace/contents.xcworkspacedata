@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:AirGoogleMaps">
+   </FileRef>
+   <FileRef
       location = "group:Nucleus.xcodeproj">
    </FileRef>
    <FileRef
