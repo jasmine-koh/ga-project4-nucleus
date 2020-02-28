@@ -124,20 +124,20 @@ const EditGroupMember = ({route, navigation}) => {
       <Header style={styles.header}>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
-            <Icon name="home" />
+            <Icon style={styles.headerText} name="home" />
           </Button>
         </Left>
         <Body>
-          <Title>Edit Group</Title>
+          <Title style={styles.headerText}>Edit Group</Title>
         </Body>
         <Right>
           <Button
             transparent
             onPress={() => {
               handleSubmit();
-              navigation.navigate('Group', {userData});
+              navigation.push('Group', {userData});
             }}>
-            <Icon name="checkmark" />
+            <Icon style={styles.headerText} name="checkmark" />
           </Button>
         </Right>
       </Header>
@@ -227,6 +227,9 @@ const styles = StyleSheet.create({
     borderColor: '#DCE4EF',
     borderWidth: 2,
     backgroundColor: '#f8f8f8',
+  },
+  headerText: {
+    color: '#000000',
   },
 });
 

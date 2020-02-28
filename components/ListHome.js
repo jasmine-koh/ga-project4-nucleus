@@ -60,17 +60,17 @@ const Lists = ({route, navigation}) => {
       <Header style={styles.header}>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
-            <Icon name="arrow-back" />
+            <Icon style={styles.headerText} name="arrow-back" />
           </Button>
         </Left>
         <Body>
-          <Title>Lists</Title>
+          <Title style={styles.headerText}>Lists</Title>
         </Body>
         <Right>
           <Button
             transparent
             onPress={() => navigation.navigate('AddNewList', {userData})}>
-            <Icon name="add" />
+            <Icon style={styles.headerText} name="add" />
           </Button>
         </Right>
       </Header>
@@ -123,6 +123,9 @@ const styles = StyleSheet.create({
     borderColor: '#DCE4EF',
     borderWidth: 2,
     backgroundColor: '#f8f8f8',
+  },
+  headerText: {
+    color: '#000000',
   },
 });
 

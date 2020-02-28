@@ -84,11 +84,11 @@ const AddGroupMember = ({route, navigation}) => {
       <Header style={styles.header}>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
-            <Icon name="home" />
+            <Icon style={styles.headerText} name="home" />
           </Button>
         </Left>
         <Body>
-          <Title>New Group</Title>
+          <Title style={styles.headerText}>New Group</Title>
         </Body>
         <Right>
           <Button
@@ -97,7 +97,7 @@ const AddGroupMember = ({route, navigation}) => {
               handleSubmit();
               navigation.push('Group', {userData});
             }}>
-            <Icon name="checkmark" />
+            <Icon style={styles.headerText} name="checkmark" />
           </Button>
         </Right>
       </Header>
@@ -169,6 +169,9 @@ const styles = StyleSheet.create({
     borderColor: '#DCE4EF',
     borderWidth: 2,
     backgroundColor: '#f8f8f8',
+  },
+  headerText: {
+    color: '#000000',
   },
 });
 

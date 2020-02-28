@@ -60,17 +60,17 @@ const Events = ({route, navigation}) => {
       <Header style={styles.header}>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
-            <Icon name="arrow-back" />
+            <Icon style={styles.headerText} name="arrow-back" />
           </Button>
         </Left>
         <Body>
-          <Title>Events</Title>
+          <Title style={styles.headerText}>Events</Title>
         </Body>
         <Right>
           <Button
             transparent
             onPress={() => navigation.push('AddNewEvent', {userData})}>
-            <Icon name="add" />
+            <Icon style={styles.headerText} name="add" />
           </Button>
         </Right>
       </Header>
@@ -125,6 +125,9 @@ const styles = StyleSheet.create({
     borderColor: '#DCE4EF',
     borderWidth: 2,
     backgroundColor: '#f8f8f8',
+  },
+  headerText: {
+    color: '#000000',
   },
 });
 

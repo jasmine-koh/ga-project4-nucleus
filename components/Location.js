@@ -21,12 +21,9 @@ import Geolocation from '@react-native-community/geolocation';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 
 const Location = ({navigation}) => {
-  const [location, setLocation] = useState({
-    latitude: 0,
-    longitude: 0,
-    ready: false,
-    error: '',
-  });
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     permission();
@@ -58,21 +55,13 @@ const Location = ({navigation}) => {
 
   //   geoSuccess
   const geoSuccess = position => {
-    ready = true;
-    latitude = position.coords.latitude;
-    longitude = position.coords.longitude;
-    setLocation(prevState => {
-      return {...prevState, ...ready, latitude, longitude};
-    });
+    setLatitude(position.coords.latitude);
+    setLongitude(position.coords.longitude);
   };
 
   // geoError
   const geoFailure = err => {
-    error = err;
-    ready = true;
-    setLocation(prevState => {
-      return {...prevState, ...ready, error};
-    });
+    setError(err);
   };
 
   return (
@@ -80,11 +69,11 @@ const Location = ({navigation}) => {
       <Header style={styles.header}>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
-            <Icon name="arrow-back" />
+            <Icon style={styles.headerText} name="arrow-back" />
           </Button>
         </Left>
         <Body>
-          <Title>Location</Title>
+          <Title style={styles.headerText}>Location</Title>
         </Body>
         <Right></Right>
       </Header>
@@ -94,14 +83,14 @@ const Location = ({navigation}) => {
           provider={PROVIDER_GOOGLE}
           style={styles.mapStyle}
           region={{
-            latitude: location.latitude,
-            longitude: location.longitude,
+            latitude: latitude,
+            longitude: longitude,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
           showsUserLocation={true}></MapView>
-        <Text>Lat: {location.latitude}</Text>
-        <Text>Lng: {location.longitude}</Text>
+        <Text>Lat: {latitude}</Text>
+        <Text>Lng: {longitude}</Text>
       </View>
     </Container>
   );
@@ -117,6 +106,9 @@ const styles = StyleSheet.create({
   mapStyle: {
     ...StyleSheet.absoluteFillObject,
     height: 400,
+  },
+  headerText: {
+    color: '#000000',
   },
 });
 

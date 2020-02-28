@@ -47,11 +47,11 @@ const AddNewGroup = ({route, navigation}) => {
       <Header style={styles.header}>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
-            <Icon name="home" />
+            <Icon style={styles.headerText} name="home" />
           </Button>
         </Left>
         <Body>
-          <Title>New Group</Title>
+          <Title style={styles.headerText}>New Group</Title>
         </Body>
         <Right>
           <Button
@@ -60,7 +60,7 @@ const AddNewGroup = ({route, navigation}) => {
               // handleSubmit();
               navigation.navigate('AddGroupMember', {emails, group, userData});
             }}>
-            <Icon name="arrow-forward" />
+            <Icon style={styles.headerText} name="arrow-forward" />
           </Button>
         </Right>
       </Header>
@@ -96,6 +96,9 @@ const styles = StyleSheet.create({
   },
   form: {
     paddingRight: 15,
+  },
+  headerText: {
+    color: '#000000',
   },
 });
 

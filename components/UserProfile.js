@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 
 import {
   Container,
@@ -7,13 +7,10 @@ import {
   Left,
   Body,
   Right,
-  Content,
   Form,
   Item,
   Input,
   Label,
-  Footer,
-  FooterTab,
   Button,
   Icon,
   Title,
@@ -80,23 +77,23 @@ const UserProfile = ({route, navigation}) => {
 
   return (
     <Container style={styles.container}>
-      <Header>
+      <Header style={styles.header}>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
-            <Icon name="home" />
+            <Icon style={styles.headerText} name="home" />
           </Button>
         </Left>
         <Body>
-          <Title>Profile</Title>
+          <Title style={styles.headerText}>Profile</Title>
         </Body>
         <Right>
           <Button transparent>
-            <Icon name="add" />
+            <Icon style={styles.headerText} name="add" />
           </Button>
         </Right>
       </Header>
-      <Content padded>
-        <Form>
+      <View>
+        <Form style={styles.form}>
           <Item fixedLabel>
             <Label>First Name: </Label>
             <Input
@@ -137,44 +134,37 @@ const UserProfile = ({route, navigation}) => {
           </Item>
         </Form>
         <Button
-          block
-          info
+          style={styles.submitButton}
           onPress={() => {
             handleSubmit();
             navigation.navigate('Home');
           }}>
           <Text>Submit</Text>
         </Button>
-      </Content>
-      <Footer>
-        <FooterTab>
-          <Button full>
-            <Text>Footer</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
+      </View>
     </Container>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#FEFEFE',
+  },
+  header: {
     backgroundColor: '#f8f8f8',
   },
-  input: {
-    margin: 15,
-    height: 40,
-    borderColor: '#7a42f4',
-    borderWidth: 1,
+  form: {
+    paddingRight: 15,
   },
   submitButton: {
-    backgroundColor: '#7a42f4',
-    padding: 10,
-    margin: 15,
-    height: 40,
+    backgroundColor: '#DCE4EF',
+    justifyContent: 'center',
   },
   submitButtonText: {
     color: 'white',
+  },
+  headerText: {
+    color: '#000000',
   },
 });
 

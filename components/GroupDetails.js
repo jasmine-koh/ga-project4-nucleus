@@ -38,11 +38,11 @@ const GroupDetails = ({route, navigation}) => {
       <Header style={styles.header}>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
-            <Icon name="home" />
+            <Icon style={styles.headerText} name="home" />
           </Button>
         </Left>
         <Body>
-          <Title>{groupData.name}</Title>
+          <Title style={styles.headerText}>{groupData.name}</Title>
         </Body>
         <Right>
           <Button
@@ -55,7 +55,7 @@ const GroupDetails = ({route, navigation}) => {
                 userData,
               })
             }>
-            <Icon name="create" />
+            <Icon style={styles.headerText} name="create" />
           </Button>
         </Right>
       </Header>
@@ -110,6 +110,9 @@ const styles = StyleSheet.create({
     borderColor: '#DCE4EF',
     borderWidth: 2,
     backgroundColor: '#f8f8f8',
+  },
+  headerText: {
+    color: '#000000',
   },
 });
 

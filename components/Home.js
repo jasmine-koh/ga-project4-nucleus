@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 
 import React, {useState, useEffect} from 'react';
 
-import {Image, StyleSheet} from 'react-native';
+import {Image, View, StyleSheet} from 'react-native';
 
 import {
   Container,
@@ -76,15 +76,14 @@ const Home = ({route, navigation}) => {
   return (
     <Container style={styles.container}>
       <Header style={styles.header}>
-        <Left>
-          <Text>Hello {userData.firstName}</Text>
-        </Left>
         <Body>
-          <Title>Home</Title>
+          <Title style={styles.headerText}>
+            {userData.firstName} {userData.lastName}
+          </Title>
         </Body>
         <Right>
           <Button transparent onPress={logout}>
-            <Icon name="log-out" />
+            <Icon style={styles.headerText} name="log-out" />
           </Button>
         </Right>
       </Header>
@@ -146,6 +145,10 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: '#f8f8f8',
+    justifyContent: 'space-around',
+  },
+  headerText: {
+    color: '#000000',
   },
   cardImg: {
     borderColor: '#e1e1e1',

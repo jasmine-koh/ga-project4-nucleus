@@ -102,11 +102,11 @@ const Groups = ({route, navigation}) => {
       <Header style={styles.header}>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
-            <Icon name="arrow-back" />
+            <Icon style={styles.headerText} name="arrow-back" />
           </Button>
         </Left>
         <Body>
-          <Title>Groups</Title>
+          <Title style={styles.headerText}>Groups</Title>
         </Body>
         <Right>
           <Button
@@ -114,7 +114,7 @@ const Groups = ({route, navigation}) => {
             onPress={() =>
               navigation.navigate('AddNewGroup', {emails, userData})
             }>
-            <Icon name="add" />
+            <Icon style={styles.headerText} name="add" />
           </Button>
         </Right>
       </Header>
@@ -170,6 +170,9 @@ const styles = StyleSheet.create({
     borderColor: '#DCE4EF',
     borderWidth: 2,
     backgroundColor: '#f8f8f8',
+  },
+  headerText: {
+    color: '#000000',
   },
 });
 

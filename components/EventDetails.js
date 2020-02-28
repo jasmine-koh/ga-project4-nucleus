@@ -145,11 +145,11 @@ const EventDetails = ({route, navigation}) => {
       <Header style={styles.header}>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
-            <Icon name="home" />
+            <Icon style={styles.headerText} name="home" />
           </Button>
         </Left>
         <Body>
-          <Title>{event.name}</Title>
+          <Title style={styles.headerText}>{event.name}</Title>
         </Body>
         <Right>
           <Button
@@ -158,7 +158,7 @@ const EventDetails = ({route, navigation}) => {
               handleSubmit();
               navigation.push('Event', {userData});
             }}>
-            <Icon name="checkmark" />
+            <Icon style={styles.headerText} name="checkmark" />
           </Button>
         </Right>
       </Header>
@@ -248,6 +248,9 @@ const styles = StyleSheet.create({
   },
   form: {
     paddingRight: 15,
+  },
+  headerText: {
+    color: '#000000',
   },
 });
 

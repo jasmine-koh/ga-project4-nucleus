@@ -110,11 +110,11 @@ const AddNewList = ({route, navigation}) => {
       <Header>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
-            <Icon name="home" />
+            <Icon style={styles.headerText} name="home" />
           </Button>
         </Left>
         <Body>
-          <Title>New List</Title>
+          <Title style={styles.headerText}>New List</Title>
         </Body>
         <Right>
           <Button
@@ -123,7 +123,7 @@ const AddNewList = ({route, navigation}) => {
               handleSubmit();
               navigation.push('Lists', {userData});
             }}>
-            <Icon name="checkmark" />
+            <Icon style={styles.headerText} name="checkmark" />
           </Button>
         </Right>
       </Header>
@@ -176,6 +176,9 @@ const styles = StyleSheet.create({
   },
   form: {
     paddingRight: 15,
+  },
+  headerText: {
+    color: '#000000',
   },
 });
 
