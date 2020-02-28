@@ -95,8 +95,8 @@ const ListDetails = ({route, navigation}) => {
   };
 
   return (
-    <Container>
-      <Header>
+    <Container style={styles.container}>
+      <Header style={styles.header}>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
             <Icon name="home" />
@@ -132,18 +132,20 @@ const ListDetails = ({route, navigation}) => {
             </Button>
           </Item>
         </Form>
-        <FlatList
-          data={item}
-          renderItem={({item}) => (
-            <TouchableOpacity>
-              <View style={styles.flatlistView}>
-                <Text>{item.name}</Text>
-                <Icon name="close" onPress={() => deleteItem(item._id)} />
-              </View>
-            </TouchableOpacity>
-          )}
-          keyExtractor={item => item._id}
-        />
+        <View style={styles.view}>
+          <FlatList
+            data={item}
+            renderItem={({item}) => (
+              <TouchableOpacity>
+                <View style={styles.flatlistView}>
+                  <Text>{item.name}</Text>
+                  <Icon name="close" onPress={() => deleteItem(item._id)} />
+                </View>
+              </TouchableOpacity>
+            )}
+            keyExtractor={item => item._id}
+          />
+        </View>
       </View>
     </Container>
   );
@@ -151,16 +153,29 @@ const ListDetails = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#FEFEFE',
+  },
+  header: {
     backgroundColor: '#f8f8f8',
+  },
+  view: {
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 20,
+    marginBottom: 20,
+    backgroundColor: '#FEFEFE',
   },
   flatlistView: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderColor: '#e1e1e1',
-    borderWidth: 1,
-    padding: 30,
+    padding: 10,
+    margin: 5,
+    borderRadius: 10,
+    borderColor: '#DCE4EF',
+    borderWidth: 2,
+    backgroundColor: '#f8f8f8',
   },
 });
 

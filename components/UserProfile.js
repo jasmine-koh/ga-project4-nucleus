@@ -91,7 +91,7 @@ const UserProfile = ({route, navigation}) => {
         </Body>
         <Right>
           <Button transparent>
-            <Icon name="settings" />
+            <Icon name="add" />
           </Button>
         </Right>
       </Header>

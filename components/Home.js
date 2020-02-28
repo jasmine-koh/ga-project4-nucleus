@@ -13,8 +13,6 @@ import {
   Content,
   Card,
   CardItem,
-  Footer,
-  FooterTab,
   Button,
   Icon,
   Title,
@@ -77,26 +75,20 @@ const Home = ({route, navigation}) => {
 
   return (
     <Container style={styles.container}>
-      <Header>
-        {/* <Left>
-          <Button transparent onPress={() => navigation.navigate('Profile')}>
-            <Icon name="person" />
-          </Button>
-        </Left> */}
+      <Header style={styles.header}>
+        <Left>
+          <Text>Hello {userData.firstName}</Text>
+        </Left>
         <Body>
           <Title>Home</Title>
         </Body>
-        {/* <Right>
-          <Button transparent>
-            <Icon name="settings" />
+        <Right>
+          <Button transparent onPress={logout}>
+            <Icon name="log-out" />
           </Button>
-        </Right> */}
+        </Right>
       </Header>
       <Content padder>
-        <Text>Hello {userData.firstName}</Text>
-        <Button onPress={logout}>
-          <Text>Logout</Text>
-        </Button>
         <Card transparent style={styles.dashboardCards}>
           <CardItem cardBody style={styles.cardImg}>
             <Image source={require('./img/logo.jpeg')} />
@@ -144,20 +136,16 @@ const Home = ({route, navigation}) => {
           </CardItem>
         </Card>
       </Content>
-      <Footer>
-        <FooterTab>
-          <Button full>
-            <Text>Footer</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
     </Container>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#476B9E',
+    backgroundColor: '#FEFEFE',
+  },
+  header: {
+    backgroundColor: '#f8f8f8',
   },
   cardImg: {
     borderColor: '#e1e1e1',
@@ -174,7 +162,7 @@ const styles = StyleSheet.create({
     height: 100,
     margin: 10,
     borderRadius: 20,
-    borderColor: '#e1e1e1',
+    borderColor: '#DCE4EF',
     borderWidth: 2,
     justifyContent: 'center',
     backgroundColor: '#f8f8f8',

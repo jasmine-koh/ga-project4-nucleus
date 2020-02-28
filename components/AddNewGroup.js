@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 
 import {
   Container,
@@ -7,7 +7,6 @@ import {
   Left,
   Body,
   Right,
-  Content,
   Form,
   Item,
   Input,
@@ -45,7 +44,7 @@ const AddNewGroup = ({route, navigation}) => {
 
   return (
     <Container style={styles.container}>
-      <Header>
+      <Header style={styles.header}>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
             <Icon name="home" />
@@ -65,8 +64,8 @@ const AddNewGroup = ({route, navigation}) => {
           </Button>
         </Right>
       </Header>
-      <Content padded>
-        <Form>
+      <View>
+        <Form style={styles.form}>
           <Item fixedLabel>
             <Label>Name: </Label>
             <Input
@@ -80,14 +79,23 @@ const AddNewGroup = ({route, navigation}) => {
             <Input placeholder="Description" onChangeText={handleDescription} />
           </Item>
         </Form>
-      </Content>
+      </View>
     </Container>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#FEFEFE',
+  },
+  header: {
     backgroundColor: '#f8f8f8',
+  },
+  view: {
+    backgroundColor: '#FEFEFE',
+  },
+  form: {
+    paddingRight: 15,
   },
 });
 

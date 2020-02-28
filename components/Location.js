@@ -77,7 +77,7 @@ const Location = ({navigation}) => {
 
   return (
     <Container style={styles.container}>
-      <Header>
+      <Header style={styles.header}>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
             <Icon name="arrow-back" />
@@ -86,13 +86,14 @@ const Location = ({navigation}) => {
         <Body>
           <Title>Location</Title>
         </Body>
+        <Right></Right>
       </Header>
 
       <View>
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.mapStyle}
-          initialRegion={{
+          region={{
             latitude: location.latitude,
             longitude: location.longitude,
             latitudeDelta: 0.0922,
@@ -108,17 +109,14 @@ const Location = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#FEFEFE',
+  },
+  header: {
     backgroundColor: '#f8f8f8',
   },
   mapStyle: {
     ...StyleSheet.absoluteFillObject,
     height: 400,
-    width: 400,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
   },
 });
 

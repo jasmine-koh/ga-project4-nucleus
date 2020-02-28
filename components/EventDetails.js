@@ -142,7 +142,7 @@ const EventDetails = ({route, navigation}) => {
 
   return (
     <Container style={styles.container}>
-      <Header>
+      <Header style={styles.header}>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
             <Icon name="home" />
@@ -163,7 +163,7 @@ const EventDetails = ({route, navigation}) => {
         </Right>
       </Header>
       <View>
-        <Form>
+        <Form style={styles.form}>
           <Item fixedLabel>
             <Label>Name: </Label>
             <Input
@@ -241,7 +241,13 @@ const EventDetails = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#FEFEFE',
+  },
+  header: {
     backgroundColor: '#f8f8f8',
+  },
+  form: {
+    paddingRight: 15,
   },
 });
 

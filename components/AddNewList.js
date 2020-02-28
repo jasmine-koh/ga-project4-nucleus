@@ -128,7 +128,7 @@ const AddNewList = ({route, navigation}) => {
         </Right>
       </Header>
       <View>
-        <Form>
+        <Form style={styles.form}>
           <Item fixedLabel>
             <Label>Name: </Label>
             <Input
@@ -169,14 +169,13 @@ const AddNewList = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#FEFEFE',
+  },
+  header: {
     backgroundColor: '#f8f8f8',
   },
-  flatlistView: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    borderColor: '#e1e1e1',
-    borderWidth: 1,
-    padding: 30,
+  form: {
+    paddingRight: 15,
   },
 });
 

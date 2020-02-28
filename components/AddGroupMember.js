@@ -81,7 +81,7 @@ const AddGroupMember = ({route, navigation}) => {
 
   return (
     <Container style={styles.container}>
-      <Header>
+      <Header style={styles.header}>
         <Left>
           <Button transparent onPress={() => navigation.navigate('Home')}>
             <Icon name="home" />
@@ -102,7 +102,7 @@ const AddGroupMember = ({route, navigation}) => {
         </Right>
       </Header>
       <View>
-        <View>
+        <View style={styles.view}>
           <Text>Members added: </Text>
           <FlatList
             data={userArray}
@@ -119,7 +119,7 @@ const AddGroupMember = ({route, navigation}) => {
             keyExtractor={item => item._id}
           />
         </View>
-        <View>
+        <View style={styles.view}>
           <Text>Available users: </Text>
           <FlatList
             data={users}
@@ -146,16 +146,29 @@ const AddGroupMember = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#FEFEFE',
+  },
+  header: {
     backgroundColor: '#f8f8f8',
+  },
+  view: {
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 20,
+    marginBottom: 20,
+    backgroundColor: '#FEFEFE',
   },
   flatlistView: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderColor: '#e1e1e1',
-    borderWidth: 1,
-    padding: 30,
+    padding: 10,
+    margin: 5,
+    borderRadius: 10,
+    borderColor: '#DCE4EF',
+    borderWidth: 2,
+    backgroundColor: '#f8f8f8',
   },
 });
 
