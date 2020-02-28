@@ -10,7 +10,6 @@ const eventSchema = new Schema({
   date: {type: String},
   time: {type: String},
   available: [{type: String}],
-  selected: {type: String},
 });
 
 const Event = mongoose.model('Event', eventSchema);

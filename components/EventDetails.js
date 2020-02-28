@@ -81,16 +81,15 @@ const EventDetails = ({route, navigation}) => {
     setSelected(itemValue);
 
     // members in group
-    for (i = 0; i < group.length; i++) {
-      if (group[i].name == selected) {
-        setAvail([group[i].members]);
+    group.map(item => {
+      if (item.name == itemValue) {
+        setAvail(item.members);
       }
-    }
+    });
   };
 
   const handleSubmit = () => {
     editEventFetch();
-    console.log(avail);
   };
 
   // get the event in database

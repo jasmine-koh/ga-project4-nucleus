@@ -58,22 +58,15 @@ const AddNewList = ({route, navigation}) => {
   const handleChange = itemValue => {
     setSelected(itemValue);
 
-    for (i = 0; i < group.length; i++) {
-      if (group[i].name == selected) {
-        group[i].members.map(member => {
-          if (member != userData._id) {
-            setAvail(prevState => {
-              return [...prevState, member];
-            });
-          }
-        });
+    group.map(item => {
+      if (item.name == itemValue) {
+        setAvail(item.members);
       }
-    }
+    });
   };
 
   const handleSubmit = () => {
-    // addListFetch();
-    console.log(avail);
+    addListFetch();
   };
 
   // get groups avaiable to user from database
